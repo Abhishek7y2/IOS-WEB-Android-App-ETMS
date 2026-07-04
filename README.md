@@ -1,93 +1,385 @@
-# internal-training-2026
+# 🚀 Employee Task Manager(Day-1)
 
+A modern Employee Task Management System built with **React**, **TypeScript**, **Vite**, and **Tailwind CSS**. This application helps administrators manage employees, assign tasks, and monitor task progress through a clean and responsive dashboard.
 
+---
 
-## Getting started
+## 📌 Project Purpose
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The Employee Task Manager is designed to simplify employee and task management by providing an intuitive interface for administrators.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Features
+- 📊 Dashboard overview
+- 👥 Employee management
+- ✅ Task assignment
+- 📋 Task tracking
+- 📱 Responsive design
+- ⚡ Fast performance using Vite
 
-## Add your files
+---
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## 🛠️ Tech Stack
+
+### Frontend
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+
+### Routing
+- React Router DOM
+
+### Development Tools
+- npm
+- Git & GitLab
+
+---
+
+## 📦 Installation
+
+Clone the repository
+
+```bash
+git clone <repository-url>
+```
+
+Navigate to the project folder
+
+```bash
+cd employee-task-manager
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+---
+
+## ▶️ Run the Project
+
+Start the development server
+
+```bash
+npm run dev
+```
+
+Open your browser
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.mobiloitte.io/root/internal-training-2026.git
-git branch -M main
-git push -uf origin main
+http://localhost:5173
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.mobiloitte.io/root/internal-training-2026/-/settings/integrations)
+## 📁 Folder Structure
 
-## Collaborate with your team
+```
+employee-task-manager
+│
+├── public/                 # Static assets
+│
+├── src/
+│   ├── assets/             # Images, icons, SVGs
+│   │
+│   ├── components/         # Reusable UI components
+│   │   ├── Header.tsx
+│   │   └── Sidebar.tsx
+│   │
+│   ├── pages/              # Application pages
+│   │   ├── Dashboard/
+│   │   │   └── Dashboard.tsx
+│   │   └── Tasks/
+│   │       └── TaskList.tsx
+│   │
+│   ├── App.tsx             # Root component
+│   ├── main.tsx            # Application entry point
+│   └── index.css           # Global styles
+│
+├── index.html              # Main HTML file
+├── package.json            # Project metadata & dependencies
+├── vite.config.ts          # Vite configuration
+├── tsconfig.json           # TypeScript configuration
+└── README.md
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+---
 
-## Test and Deploy
+## 📂 Important Files
 
-Use the built-in continuous integration in GitLab.
+### `index.html`
+The single HTML file loaded by the browser. It contains the `root` element where the React application is mounted.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### `main.tsx`
+The entry point of the React application. It initializes React and renders the root component (`App.tsx`).
 
-***
+### `App.tsx`
+The root component responsible for organizing the application's layout and rendering all major components.
 
-# Editing this README
+### `index.css`
+Contains global styles and imports Tailwind CSS.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### `package.json`
+Stores project metadata, dependencies, scripts, and package information.
 
-## Suggestions for a good README
+### `vite.config.ts`
+Configuration file for Vite, including React and Tailwind CSS plugins.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+---
 
-## Name
-Choose a self-explaining name for your project.
+## 🧩 Current Components
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- Header
+- Sidebar
+- Dashboard
+- Task List
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+---
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## 📚 Available Scripts
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Run the development server
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```bash
+npm run dev
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Build for production
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+npm run build
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Preview the production build
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+npm run preview
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Lint the project
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+npm run lint
+```
 
-## License
-For open source projects, say how it is licensed.
+---
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## 🚀 Future Enhancements
+
+- User Authentication
+- Role-Based Access Control
+- Task Status Management
+- Employee CRUD Operations
+- Search & Filters
+- Notifications
+- Dark Mode
+- Charts & Analytics
+- Backend API Integration
+- Database Support
+
+---
+
+## 👨‍💻 Author
+
+**Yuvraj Singh Rawat**
+
+---
+
+# 🚀 Employee Task Manager (Day-2)
+
+Building on Day 1, Day 2 focused on making the project **beginner-friendly**, properly structured, and fully responsive with real static data visible on load.
+
+---
+
+## ✅ What Was Done on Day 2
+
+### 1. Created TypeScript Types (`src/types/index.ts`)
+- Defined shared interfaces: `Task` and `SummaryCard`
+- All components now use the same types — no duplicate declarations across files
+
+### 2. Created Data Layer (`src/data/tasks.ts`)
+- All static data moved into one dedicated file
+- Dashboard now shows 5 tasks immediately on load — no button click needed
+- Summary card counts are calculated automatically from the task array
+- When a real backend is added later, only this file needs to change
+
+### 3. Created `TaskSummaryCard` Component (`src/components/TaskSummaryCard.tsx`)
+- Fully reusable card component built with TypeScript props
+- Accepts: `title`, `count`, `icon`, `colorClass`
+- No business logic inside — just displays what it receives
+- Used 4 times on the Dashboard with different data
+
+### 4. Created `TaskTable` Component (`src/components/TaskTable.tsx`)
+- Reusable table that accepts a `tasks[]` array as a prop
+- Helper functions handle badge colors for Priority and Status
+- Reused on both Dashboard and TaskList pages
+
+### 5. Made UI Responsive (`src/components/Sidebar.tsx` & `Header.tsx`)
+- Sidebar is hidden on mobile by default
+- Hamburger menu (☰) button appears in Header on mobile
+- Clicking it slides the Sidebar in from the left
+- Clicking the overlay closes it
+- All props made **optional** so components work with or without them
+
+---
+
+## 📁 Updated Folder Structure (Day 2)
+
+```
+src/
+├── components/
+│   ├── Header.tsx            # Updated — optional props, hamburger button
+│   ├── Sidebar.tsx           # Updated — mobile slide-in, optional props
+│   ├── TaskSummaryCard.tsx   # NEW — reusable summary card
+│   └── TaskTable.tsx         # NEW — reusable task table
+│
+├── data/
+│   └── tasks.ts              # NEW — all static data in one place
+│
+├── types/
+│   └── index.ts              # NEW — shared TypeScript interfaces
+│
+├── pages/
+│   ├── Dashboard.tsx         # Updated — uses static data + new components
+│   └── TaskList.tsx          # Updated — reuses TaskTable component
+│
+├── App.tsx                   # Updated — simpler, optional props
+└── index.css                 # Updated — clean reset, no conflicts
+```
+
+---
+
+## 🧠 Concepts Learned on Day 2
+
+| Concept | What It Means |
+|---|---|
+| TypeScript interfaces | Define the shape/structure of your data |
+| Props | Pass data into a component from its parent |
+| Optional props (`?`) | Props that don't have to be provided |
+| Default prop values | Safe fallback when a prop is not passed |
+| Data separation | Keep data out of components — easier to change later |
+| `.map()` | Loop over an array to render a list in React |
+| `useState` | Remember simple values like current page or sidebar open/closed |
+| Responsive design | Use Tailwind's `md:` prefix to change layout at different screen sizes |
+| Helper functions | Extract color logic out of JSX to keep it readable |
+
+---
+
+## 👨‍💻 Author
+
+**Yuvraj Singh Rawat**
+
+---
+
+# 🚀 Employee Task Manager (Day-3)
+
+Building on Day 2, Day 3 focused on **dynamic sub-components**, **strict TypeScript imports**, **polished visual design**, and fixing the **blank-screen bug** caused by Vite module compilation.
+
+---
+
+## ✅ What Was Done on Day 3
+
+### 1. Standardized the Task Interface (`src/types/index.ts`)
+- Added `description`, `createdAt`, and `OnHold` / `Critical` options to the Task interface
+- Used **union types** (`'Pending' | 'InProgress' | 'Completed' | 'OnHold'`) to prevent invalid status values
+- Replaced `string` dates with proper `Date` objects for locale-aware formatting
+
+### 2. Created Reusable Visual Sub-Components
+- **`StatusBadge.tsx`** — Colored pill badge that auto-maps status to pastel colors using a `Record<string, string>` lookup
+- **`PriorityBadge.tsx`** — Same pattern for priority levels (Critical, High, Medium, Low)
+- **`Avatar.tsx`** — Auto-generates user initials from name and assigns a consistent color via a hash function
+- **`ProgressBar.tsx`** — Dynamic gradient bar that calculates completion percentage from data
+
+### 3. Fixed the Blank Screen Bug (`import type`)
+- Vite's `verbatimModuleSyntax` setting strips non-type imports at build time
+- Interfaces were being imported with regular `import`, causing runtime module errors
+- Fixed by switching all interface imports to `import type { Task, SummaryCard }`
+
+### 4. Updated Data Layer (`src/data/tasks.ts`)
+- Expanded from 5 to 8 realistic mock task records with diverse statuses and priorities
+- Added `createdAt` field to every record
+- Updated `summaryCards` with consistent indigo/amber/emerald color palette
+
+### 5. Dynamic Table Rendering (`src/components/TaskTable.tsx`)
+- Integrated `StatusBadge`, `PriorityBadge`, and `Avatar` inside each table row
+- Added `createdAt` column with locale-aware date formatting (`toLocaleDateString`)
+- Added empty-state UI (📭 message) when no tasks exist
+- Task titles highlight on hover using group transitions
+
+### 6. Premium UI Overhaul (All-White Aesthetic)
+- **Global**: Added Inter font from Google Fonts, custom scrollbar, off-white canvas (`#f8fafc`)
+- **Header**: Glassmorphism effect (`bg-white/80` + `backdrop-blur-md`), soft shadow
+- **Sidebar**: Clean thin borders, polished nav hover states, minimalist help box
+- **Summary Cards**: Soft shadows, subtle hover lift effect (`hover:-translate-y-0.5`)
+- **Task Table**: Spacious padding, refined column headers, smooth row transitions
+- **Badges**: Pastel backgrounds with matching thin border outlines
+- **Layout**: Constrained content to `max-w-6xl` for comfortable desktop reading
+
+---
+
+## 📁 Updated Folder Structure (Day 3)
+
+```
+src/
+├── components/
+│   ├── Header.tsx            # UPDATED — glassmorphism, polished bell & avatar
+│   ├── Sidebar.tsx           # UPDATED — clean borders, minimalist help box
+│   ├── TaskSummaryCard.tsx   # UPDATED — hover lift, soft shadows, uppercase labels
+│   ├── TaskTable.tsx         # UPDATED — badges, avatars, createdAt, empty state
+│   ├── StatusBadge.tsx       # NEW — auto-colored status pill
+│   ├── PriorityBadge.tsx     # NEW — auto-colored priority pill
+│   ├── Avatar.tsx            # NEW — initials circle with hash-based color
+│   └── ProgressBar.tsx       # NEW — dynamic gradient completion bar
+│
+├── data/
+│   └── tasks.ts              # UPDATED — 8 records, createdAt, refined colors
+│
+├── types/
+│   └── index.ts              # UPDATED — description, createdAt, OnHold, Critical
+│
+├── pages/
+│   ├── Dashboard.tsx         # UPDATED — ProgressBar, dynamic completed count
+│   └── TaskList.tsx          # UPDATED — polished heading typography
+│
+├── App.tsx                   # UPDATED — off-white bg, max-width content wrapper
+├── index.css                 # UPDATED — Inter font, custom scrollbar, body gradient
+└── main.tsx                  # No changes
+index.html                    # UPDATED — Google Fonts preconnect links
+```
+
+---
+
+## 🧠 Concepts Learned on Day 3
+
+| Concept | What It Means |
+|---|---|
+| Union types | `'A' \| 'B' \| 'C'` — restricts a value to only these options |
+| `import type` | Tells Vite an import is type-only and safe to strip at build time |
+| `Record<K, V>` | A clean way to define lookup dictionaries / maps |
+| Hash functions | Convert a string (name) into a consistent number for auto-coloring |
+| `Date` objects | Use `new Date()` instead of strings for proper date formatting |
+| `toLocaleDateString()` | Formats dates based on user's language and region |
+| Empty state pattern | Show a friendly message when data is empty instead of a blank table |
+| `key` prop | Unique ID React needs for each repeated list element |
+| Glassmorphism | Semi-transparent background + blur for a frosted-glass effect |
+| CSS custom shadows | `shadow-[0_2px_8px_rgba(0,0,0,0.02)]` for precise soft shadows |
+| Hover transitions | `hover:-translate-y-0.5` + `transition-all` for smooth card lifts |
+| Group hover | `group` + `group-hover:text-indigo-600` to style children on parent hover |
+
+---
+
+## 🐛 Issues Faced & Solved on Day 3
+
+| Issue | Cause | Solution |
+|---|---|---|
+| Blank screen on localhost | `verbatimModuleSyntax` strips non-type imports | Changed to `import type { Task }` |
+| `createdAt` not showing | Field missing from mock data | Added `createdAt: new Date(...)` to all records |
+| Dates showing as raw strings | Using `string` type instead of `Date` | Switched to `Date` objects with `toLocaleDateString()` |
+| UI looked flat and dull | Default gray borders and no shadows | Applied soft shadows, thin borders, glassmorphism, hover effects |
+
+---
+
+## 👨‍💻 Author
+
+**Yuvraj Singh Rawat**
