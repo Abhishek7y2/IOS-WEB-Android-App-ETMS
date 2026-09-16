@@ -1,0 +1,88 @@
+================================================================================
+     IOS FRONTEND DEVELOPMENT & NODE.JS BACKEND INTEGRATION GUIDE
+================================================================================
+
+1. CHOOSE YOUR IOS DEVELOPMENT TECH STACK
+--------------------------------------------------------------------------------
+Option 1: Swift & SwiftUI (Native iOS Development)
+- Tool: Xcode 15+
+- Language: Swift 5.9+
+- Best for: Pure native Apple performance and native iOS widgets.
+
+Option 2: React Native & Expo SDK 57 (Cross-Platform iOS)
+- Tool: VS Code / Xcode
+- Language: TypeScript / React Native
+- Best for: Sharing maximum code between iOS and Android.
+
+
+2. HOW IOS APP COMMUNICATES WITH YOUR NODE.JS BACKEND
+--------------------------------------------------------------------------------
+Architecture:
+iOS App (SwiftUI/React Native) <---> HTTP REST API + WebSockets <---> Node.js Backend Server
+
+Backend Base URL Configuration:
+- Local Development: http://<YOUR_MAC_LOCAL_IP>:5000/api
+- Production Server: https://api.yourdomain.com/api
+
+Core API Endpoints Required on iOS:
+- Auth: POST /api/auth/login, POST /api/auth/signup
+- Tasks: GET /api/tasks, POST /api/tasks, PUT /api/tasks/:id
+- Attendance: POST /api/attendance/check-in (with Latitude & Longitude)
+- Leave: GET /api/leaves, POST /api/leaves/apply
+- Chat: GET /api/chat/history, POST /api/chat/send
+- Gemini AI RAG: POST /api/rag/query
+
+
+3. SECURITY & TOKEN MANAGEMENT ON IOS
+--------------------------------------------------------------------------------
+- Store JWT Access Token & Refresh Token in iOS Keychain (Never use UserDefaults).
+- Attach JWT token in every HTTP Request header:
+  Authorization: Bearer <JWT_TOKEN>
+- Handle 401 Unauthorized responses to automatically trigger Token Refresh.
+
+
+4. REAL-TIME SOCKET.IO ENGINE ON IOS
+--------------------------------------------------------------------------------
+- Install Socket.IO Client for iOS (SocketIO-Client-Swift or socket.io-client).
+- Pass JWT Token during socket handshake.
+- Listen for real-time socket events:
+  - 'task:updated' -> Automatically refresh task UI card.
+  - 'message:received' -> Append new message to chat UI screen.
+  - 'announcement:broadcast' -> Show iOS local banner notification.
+
+
+5. REQUIRED IOS PERMISSIONS (Info.plist)
+--------------------------------------------------------------------------------
+- NSLocationWhenInUseUsageDescription: Required for Geolocation Attendance Punch In.
+- NSCameraUsageDescription: Required for taking task attachment photos.
+- NSPhotoLibraryUsageDescription: Required for selecting task documents from Photos.
+
+
+6. STEP-BY-STEP IOS IMPLEMENTATION ROADMAP
+--------------------------------------------------------------------------------
+Step 1: Environment Setup
+- Install Xcode and setup iOS Simulator or physical iPhone device.
+
+Step 2: API Client Network Manager
+- Create API Network Manager class with URLSession / Axios.
+- Add error handling, authorization headers, and JSON decoding models.
+
+Step 3: Auth Screens
+- Build Login, Signup, and OTP Verification screens.
+- Implement Keychain Token Storage.
+
+Step 4: Main Navigation & Dashboard
+- Implement Tab Bar Navigation (Tasks, Attendance, Chat, AI RAG, Profile).
+
+Step 5: Task Management UI
+- Create Task Cards, Subtask Checklists, Priority Badges, and Cloudinary Media Uploader.
+
+Step 6: Attendance & Geolocation
+- Request Location permission and capture Latitude/Longitude for Clock In/Out.
+
+Step 7: Real-Time Chat & AI RAG Bot
+- Connect Socket.IO client and build Messaging UI.
+- Connect Gemini RAG API for PDF Document Q&A.
+
+Step 8: Testing & Deployment
+- Test on TestFlight, run unit tests, and publish to Apple App Store.

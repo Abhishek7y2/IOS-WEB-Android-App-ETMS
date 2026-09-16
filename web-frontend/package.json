@@ -1,0 +1,48 @@
+{
+  "name": "enterprise-employee-task-manager",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "dev:server": "npm --prefix server run dev",
+    "dev:all": "npx tsx scripts/start-all.ts",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.101.4",
+    "axios": "^1.18.1",
+    "country-state-city": "^3.2.1",
+    "country-telephone-data": "^0.6.3",
+    "dotenv": "^17.4.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
+    "libphonenumber-js": "^1.13.9",
+    "lucide-react": "^1.21.0",
+    "mongoose": "^9.7.2",
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-easy-crop": "^6.2.3",
+    "react-markdown": "^10.1.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-select": "^5.10.2",
+    "recharts": "^3.9.0",
+    "remark-gfm": "^4.0.1",
+    "socket.io-client": "^4.8.3",
+    "sonner": "^2.0.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "tsx": "^4.22.4",
+    "typescript": "^5.9.3"
+  }
+}

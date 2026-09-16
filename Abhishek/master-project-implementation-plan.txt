@@ -1,0 +1,118 @@
+MASTER PROJECT IMPLEMENTATION PLAN FOR MINI TASK MANAGEMENT SYSTEM
+
+
+1. MASTER PROJECT SCOPE AND ARCHITECTURE
+
+The project is an enterprise work and employee task management platform.
+Backend is built using Node.js Express and TypeScript with MongoDB Atlas.
+Web Frontend is built using Next.js 16 with React 19 and Tailwind CSS.
+Cross platform mobile app is built using React Native with Expo SDK 57.
+Native iOS application is built using pure Swift 5.9 and SwiftUI.
+Real-time communication is powered by Socket.IO WebSockets.
+Document intelligence is powered by Google Gemini AI RAG engine.
+Media storage and attachments are managed via Cloudinary cloud SDK.
+
+
+2. BACKEND API ENGINE IMPLEMENTATION
+
+Set up Express server in server.ts with Node.js cluster support.
+Configure Express app in app.ts with CORS helmet and body parser.
+Implement CORS rate limiting XSS sanitizer and anti CSRF middleware.
+Implement JWT authentication middleware for access and refresh tokens.
+Build authController for user registration login OTP and password resets.
+Build taskController for task creation assignment status updates and subtasks.
+Build attendanceController for geolocation punch in punch out and durations.
+Build leaveController for leave quota balance checks and manager approvals.
+Build chatController for direct messaging and group chat channels.
+Build ragController for PDF document chunking and Gemini AI vector search.
+
+
+3. MONGOOSE DATABASE SCHEMAS AND DATA MODELING
+
+User model stores account credentials roles hashed passwords and tokens.
+Task model stores titles descriptions assignees due dates priorities and subtasks.
+TaskAuditLog model stores immutable history of all task status modifications.
+Attendance model stores daily clock in clock out times and coordinates.
+Leave and LeaveBalance models handle employee leave requests and quotas.
+Conversation and Message models handle group channels and direct messages.
+Document and DocumentChunk models store uploaded files and vector embeddings.
+Announcement and Notification models handle broadcast alerts and notifications.
+
+
+4. WEB FRONTEND DASHBOARD IMPLEMENTATION
+
+Set up Next.js 16 App Router folder structure in web-frontend directory.
+Create AuthContext and TaskContext React providers for global state.
+Build responsive Admin Dashboard with Recharts analytics and KPI metrics.
+Build interactive Task Management Board with Kanban and list views.
+Build Attendance tracking module with monthly calendar grid view.
+Build Leave management portal with manager approval workflow controls.
+Build Real-time Chat interface with Socket.IO client integration.
+Build RAG AI Assistant interface for company document search.
+
+
+5. CROSS PLATFORM MOBILE APP IMPLEMENTATION
+
+Set up Expo React Native TypeScript project structure in mobile-app directory.
+Configure React Navigation with Native Stack and Bottom Tabs.
+Build Native mobile Login and Profile management screens.
+Build Mobile Task Board with priority badges and subtask checklists.
+Build Mobile Attendance Punch screen with location coordinates.
+Build Mobile Real-time Chat screen with Socket.IO listeners.
+Integrate Expo ImagePicker and Cloudinary for task photo attachments.
+
+
+6. NATIVE IOS APP IMPLEMENTATION IN PURE SWIFTUI
+
+Set up Xcode project structure in IOS app directory.
+Create TaskItem User AttendanceRecord and MessageItem Swift structs.
+Create APIManager service using native Swift URLSession async await.
+Create KeychainService using Apple Security framework for token storage.
+Create LocationManager using CoreLocation for GPS coordinate capture.
+Create LoginView.swift with email and password text fields.
+Create MainTabView.swift with five tab bottom navigation bar.
+Create TaskListView.swift with segmented status picker and task cards.
+Create AttendanceClockView.swift with animated Punch button and timer.
+
+
+7. REAL TIME SOCKET ENGINE INTEGRATION
+
+Attach Socket.IO server to HTTP server in backend socket.server.ts.
+Authenticate incoming socket connections using JWT token in socket.auth.ts.
+Manage room join and leave logic for channels in socket.rooms.ts.
+Emit realtime events for task updates and messages in event.publisher.ts.
+Connect Web Mobile and SwiftUI iOS socket clients for instant UI sync.
+
+
+8. GOOGLE GEMINI AI RAG ENGINE INTEGRATION
+
+Configure Google Gemini AI SDK on the Node.js backend server.
+Parse uploaded PDF documents and split text into paragraph chunks.
+Generate high dimensional vector embeddings for text chunks using Gemini AI.
+Save vector embeddings and metadata in DocumentChunk Mongoose schema.
+Execute vector similarity search when user submits search query.
+Send matched document context to Gemini AI to return accurate responses.
+
+
+9. CLOUDINARY MEDIA ATTACHMENTS PIPELINE
+
+Configure Cloudinary node SDK with API keys on backend API.
+Create secure media upload endpoint for image and document files.
+Integrate drag and drop image upload on Next.js web frontend.
+Integrate gallery photo picker on Expo React Native mobile app.
+Integrate SwiftUI PhotosPicker on Native iOS application.
+Display uploaded media URLs using optimized image previewers.
+
+
+10. TESTING VERIFICATION AND PRODUCTION DEPLOYMENT PLAN
+
+Run backend unit tests and API endpoint verification using Jest.
+Verify JWT authentication refresh token rotation and RBAC guards.
+Test web dashboard layout responsiveness across desktop and tablet.
+Test Expo mobile app on Android Emulator and iOS Simulator.
+Test Native SwiftUI app on Xcode iOS Simulator and physical iPhone.
+Verify Socket.IO real-time message broadcasting across all clients.
+Verify Gemini AI document RAG response accuracy.
+Deploy Node.js backend to cloud production hosting server.
+Deploy Next.js web app to Vercel or cloud web host.
+Publish Expo mobile app and SwiftUI iOS app to App Stores.

@@ -1,0 +1,32 @@
+================================================================================
+          INTEL PROCESSOR & WINDOWS COMPATIBILITY GUIDE FOR IOS APP
+================================================================================
+
+1. WILL SWIFTUI RUN ON INTEL PROCESSOR MACS?
+--------------------------------------------------------------------------------
+YES, 100% FULLY SUPPORTED.
+- SwiftUI and Xcode run perfectly on Intel-based Macs (Intel Core i5, i7, i9 MacBooks, iMacs, and Mac Minis).
+- As long as your Intel Mac is running macOS Ventura (13.0+), Sonoma (14.0+), or Sequoia (15.0+), Xcode 15 and 16 with SwiftUI work completely fine.
+
+
+2. WHAT IF YOU ARE ON A WINDOWS PC WITH AN INTEL PROCESSOR?
+--------------------------------------------------------------------------------
+Native Xcode and SwiftUI Simulator are macOS exclusive software created by Apple.
+If you are currently working on a Windows PC with an Intel CPU, here are your options:
+
+Option 1: macOS Virtual Machine on Windows (VMware / VirtualBox)
+- You can install macOS inside VMware Workstation or VirtualBox on your Intel Windows PC.
+- Inside the macOS Virtual Machine, you can install Xcode and run SwiftUI iOS apps.
+
+Option 2: React Native / Expo (Cross-Platform Development on Windows)
+- The mobile-app directory in your project uses Expo SDK 57.
+- You can run Expo on Windows and test the iOS app using the Expo Go app on your physical iPhone or via Expo snack/cloud.
+
+Option 3: Cloud Mac Service (MacInCloud / Xcode Cloud)
+- Rent a cloud Mac instance online (e.g., MacInCloud) to build and publish SwiftUI apps directly from your Windows web browser.
+
+
+3. SUMMARY & RECOMMENDATION
+--------------------------------------------------------------------------------
+- On Intel Mac: Xcode + SwiftUI runs natively without any issue.
+- On Intel Windows PC: Use Virtual Machine (VMware) for Native SwiftUI OR use Expo for testing.

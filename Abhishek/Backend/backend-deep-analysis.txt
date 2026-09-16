@@ -1,0 +1,113 @@
+DEEP ANALYSIS OF BACKEND MODULE IN MINI TASK MANAGEMENT SYSTEM
+
+
+1. BACKEND ARCHITECTURE AND OVERVIEW
+
+The backend is built using Node.js with Express and TypeScript.
+It operates as a RESTful API server with real-time web socket support.
+It uses MongoDB Atlas with Mongoose ORM for data storage.
+It integrates Google Gemini AI for document RAG retrieval.
+It uses Cloudinary for cloud media file attachments.
+It implements cluster support for high performance production deployment.
+
+
+2. DIRECTORY AND FILE STRUCTURE DETAILS
+
+The root server launcher files are app.ts and server.ts in src.
+Directory config contains database connection and environment setup.
+Directory models contains 22 Mongoose schemas defining all data entities.
+Directory controllers contains 11 Express controllers for request handling.
+Directory routes contains 11 route files defining API endpoints.
+Directory services contains business logic services and RAG engine.
+Directory realtime contains Socket.IO handlers authentication and event publishers.
+Directory middleware contains JWT auth rate limiting CSRF and sanitizers.
+Directory validators contains request validation schemas.
+Directory utils contains helper utilities for logging tokens and dates.
+
+
+3. SERVER ENTRY POINT AND EXECUTION FLOW
+
+File server.ts starts the Express application on specified port.
+It initializes database connections and Socket.IO server instances.
+File app.ts configures Express middleware such as CORS helmet and body parser.
+It registers all API route endpoints under /api prefix.
+Incoming requests pass through CORS rate limiter and auth middleware.
+Valid requests reach the corresponding route handler and controller.
+Controllers invoke business services and Mongoose models for data ops.
+Responses are formatted in standardized JSON structure.
+
+
+4. DATABASE MODELS AND SCHEMAS
+
+User model stores user profile credentials role and encrypted tokens.
+Task model stores task titles descriptions assignees priorities and status.
+TaskAuditLog model records immutable audit history of all task modifications.
+Attendance model tracks daily clock in clock out times and geolocation.
+Leave and LeaveBalance models handle leave requests balances and approvals.
+Conversation and Message models handle team chat channels and direct messages.
+Document and DocumentChunk models store uploaded files and vector embeddings.
+Announcement and Notification models handle system broadcasts and alerts.
+Holiday and Note models support administrative calendar and user notes.
+
+
+5. CONTROLLER AND ROUTE LOGIC
+
+authController handles registration login password reset and OTP verification.
+taskController handles task creation editing status updates and deletion.
+attendanceController handles punch in punch out and attendance reports.
+leaveController handles employee leave applications and manager approvals.
+chatController handles fetching chat history sending messages and channels.
+ragController handles PDF document upload chunking and AI search queries.
+profileController handles user profile updates and avatar uploads.
+holidayController handles holiday calendar CRUD operations.
+notificationController handles fetching and marking notifications as read.
+
+
+6. BUSINESS SERVICES LAYER
+
+taskService manages complex task logic subtasks and audit logging.
+attendanceService calculates work duration overtime and monthly totals.
+leaveService checks leave balances updates quotas and handles approval workflows.
+communicationService manages chat messages media links and unread counts.
+rag service manages document text extraction embedding generation and vector search.
+otpLimiter manages rate limiting for OTP verification attempts.
+
+
+7. REALTIME SOCKET ENGINE
+
+socket.server.ts initializes Socket.IO server attached to HTTP server.
+socket.auth.ts verifies JWT authentication token on incoming socket connections.
+socket.rooms.ts manages user joining and leaving chat rooms and task rooms.
+event.publisher.ts emits real-time events for task status changes and messages.
+Clients receive instant updates without refreshing web or mobile app pages.
+
+
+8. GOOGLE GEMINI AI RAG ENGINE
+
+Document parser extracts text content from uploaded company PDF files.
+Text chunking splits document text into smaller meaningful paragraphs.
+Gemini AI embedding model converts text chunks into high dimensional vector arrays.
+DocumentChunk model saves vector embeddings in MongoDB database.
+Search query generates input vector and matches closest document chunks.
+Prompt with matched context is sent to Gemini AI to generate accurate answers.
+
+
+9. SECURITY AND MIDDLEWARE LAYER
+
+authMiddleware validates JWT access tokens attached in HTTP headers.
+xssSanitizer prevents cross site scripting attacks in incoming JSON payload.
+csrfMiddleware validates CSRF tokens for web frontend security.
+chatRateLimiter prevents spam in messaging channels.
+validateRequest ensures incoming payload matches expected TypeScript interfaces.
+errorHandler handles unexpected application runtime exceptions gracefully.
+
+
+10. DATA FLOW AND WORKING MECHANISM SUMMARY
+
+Client sends REST API HTTP request with authorization token.
+Express route matches endpoint URL and passes request to middleware chain.
+Middleware verifies JWT token and sanitizes incoming request body.
+Controller extracts parameters and delegates work to business service layer.
+Service layer queries MongoDB through Mongoose model schema.
+Real-time events are published via Socket.IO if data changes occur.
+Controller returns JSON response back to client application.

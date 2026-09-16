@@ -1,0 +1,16 @@
+BACKEND MODULE OVERVIEW
+
+
+1. MODULE PURPOSE
+
+This folder contains backend server specifications and configurations.
+It is built with Node.js Express and TypeScript.
+It provides REST API endpoints and real-time Socket.IO services.
+
+
+2. KEY COMPONENTS
+
+Database models using Mongoose for MongoDB Atlas.
+JWT authentication middleware and password security.
+Task and attendance controllers for business logic.
+Google Gemini AI integration for vector document search.

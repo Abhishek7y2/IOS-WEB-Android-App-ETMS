@@ -1,0 +1,13 @@
+{
+  "name": "enterprise-employee-task-manager-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix web-frontend run dev:all",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:web": "npm --prefix web-frontend run dev",
+    "dev:mobile": "npm --prefix mobile-app run start",
+    "build:backend": "npm --prefix backend run build",
+    "build:web": "npm --prefix web-frontend run build"
+  }
+}

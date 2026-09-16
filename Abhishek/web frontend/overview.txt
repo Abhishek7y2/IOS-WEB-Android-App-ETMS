@@ -1,0 +1,16 @@
+WEB FRONTEND MODULE OVERVIEW
+
+
+1. MODULE PURPOSE
+
+This folder contains web frontend components and configurations.
+It is built with Next.js 16 and React 19.
+It provides the employee task management web portal.
+
+
+2. KEY FEATURES
+
+User authentication and role based dashboards.
+Interactive task management Kanban board and list view.
+Real-time Socket.IO chat and notification center.
+Gemini AI RAG document assistant interface.

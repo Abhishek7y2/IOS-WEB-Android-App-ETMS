@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Production builds
+dist/
+**/dist/
+build/
+**/build/
+.next/
+**/.next/
+.expo/
+**/.expo/
+tsconfig.tsbuildinfo
+**/tsconfig.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+*.env
+
+# Archive / compressed files
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+
+# Database / Local storage data
+.mongodb-data/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Exclude Markdown files except root README.md
+*.md
+**/*.md
+!README.md
+
+

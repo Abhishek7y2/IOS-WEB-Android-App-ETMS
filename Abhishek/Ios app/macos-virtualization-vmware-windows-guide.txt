@@ -1,0 +1,66 @@
+================================================================================
+     MACOS VIRTUALIZATION GUIDE ON WINDOWS PC FOR XCODE & SWIFTUI
+================================================================================
+
+1. SYSTEM PREREQUISITES
+--------------------------------------------------------------------------------
+- Windows OS: Windows 10 or Windows 11 (64-bit).
+- Processor: Intel Core i5 / i7 / i9 (with VT-x Virtualization enabled in BIOS).
+- RAM: Minimum 16GB System RAM (Assign 8GB to macOS Virtual Machine).
+- Storage: Minimum 80GB free SSD space.
+
+
+2. STEP-BY-STEP VIRTUALIZATION SETUP PROCEDURE
+--------------------------------------------------------------------------------
+
+STEP 1: Enable Intel Virtualization (VT-x) in BIOS
+- Restart your Windows PC.
+- Press F2, F10, or Del key repeatedly to enter BIOS settings.
+- Navigate to CPU Configuration / Advanced Settings.
+- Enable "Intel Virtualization Technology" (VT-x / VMX).
+- Press F10 to Save and Exit, then boot back into Windows.
+
+STEP 2: Download Required Files
+- Software 1: VMware Workstation Player (Free for personal use).
+- Software 2: VMware Auto-Unlocker for macOS (Enables Apple OS option).
+- File 3: macOS Ventura (13.0) or Sonoma (14.0) ISO / VMDK image file.
+
+STEP 3: Run VMware Unlocker
+- Extract the downloaded VMware Unlocker ZIP folder.
+- Right-click "win-install.cmd" file and select "Run as Administrator".
+- Wait for the script to finish patching VMware to enable Mac OS X support.
+
+STEP 4: Create macOS Virtual Machine in VMware
+- Launch VMware Workstation Player.
+- Click "Create a New Virtual Machine".
+- Select "I will install the operating system later" -> Click Next.
+- Select Guest Operating System: "Apple Mac OS X" -> Version: "macOS 13" or "macOS 14".
+- Specify Virtual Machine Name (e.g., macOS-Xcode) and Location.
+- Specify Disk Capacity: Set maximum disk size to 80 GB -> Select "Store virtual disk as a single file".
+- Click "Customize Hardware":
+  - Memory: Set to 8192 MB (8 GB).
+  - Processors: Set to 4 Processor Cores.
+  - New CD/DVD (SATA): Select "Use ISO image file" and browse to your downloaded macOS ISO file.
+- Click Finish.
+
+STEP 5: Add macOS VMX Compatibility Fix (Crucial)
+- Close VMware completely.
+- Open File Explorer and navigate to your Virtual Machine folder (e.g., Documents/Virtual Machines/macOS-Xcode/).
+- Locate the ".vmx" configuration file (e.g., macOS-Xcode.vmx).
+- Right-click the .vmx file and select "Open with Notepad".
+- Scroll to the very bottom of the file and add the following lines:
+  smc.version = "0"
+  cpuid.1.eax = "0000:0000:0000:0001:0000:0110:1010:0101"
+- Save and close Notepad.
+
+STEP 6: Boot macOS & Complete Installation
+- Open VMware Workstation and Start the macOS Virtual Machine.
+- When macOS installer boots, select "Disk Utility" from Utilities menu.
+- Select "VMware Virtual SATA Hard Drive Media" -> Click Erase -> Name: "Macintosh HD", Format: "APFS" -> Click Erase.
+- Close Disk Utility and select "Install macOS".
+- Select "Macintosh HD" as destination drive and complete installation setup.
+
+STEP 7: Install Xcode inside macOS
+- Once macOS boots to Desktop, open the Mac App Store.
+- Search for "Xcode" and click Install.
+- Open Xcode once installed. Now you can build, run, and test your SwiftUI App!

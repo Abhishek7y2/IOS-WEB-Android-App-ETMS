@@ -1,0 +1,36 @@
+================================================================================
+           MACOS & XCODE SETUP GUIDE FOR NATIVE SWIFTUI IOS APP
+================================================================================
+
+1. STEP-BY-STEP SETUP ON MACOS
+--------------------------------------------------------------------------------
+
+Step 1: Install Xcode from Mac App Store
+- Open App Store on your macOS.
+- Search for "Xcode" and click Install (Xcode 15 or Xcode 16).
+- Open Xcode once installed to complete component setup.
+
+Step 2: Open the SwiftUI Project Folder
+- Copy the project folder to your macOS.
+- Navigate to: IOS app/EnterpriseTaskSystemIOS/
+- Open Xcode -> File -> New -> Project -> Select "iOS" -> Select "App".
+- Name the project: EnterpriseTaskSystemIOS.
+- Select Interface: SwiftUI, Language: Swift.
+
+Step 3: Add Existing Source Files to Xcode
+- Drag and drop the following folders/files from IOS app/EnterpriseTaskSystemIOS/ into your Xcode Project Navigator:
+  ├── EnterpriseTaskSystemApp.swift
+  ├── Models/ (TaskItem.swift)
+  ├── Services/ (APIManager.swift, KeychainService.swift)
+  ├── ViewModels/ (AuthViewModel.swift, TaskViewModel.swift)
+  └── Views/ (LoginView.swift, MainTabView.swift, TaskListView.swift)
+
+Step 4: Update Backend Server IP
+- Open Services/APIManager.swift in Xcode.
+- Change baseURL to your Node.js backend IP address:
+  private let baseURL = "http://YOUR_BACKEND_IP:5000/api"
+
+Step 5: Run on iOS Simulator or Physical iPhone
+- Select Target Device: iPhone 15 Pro / iPhone 16 Pro Simulator.
+- Press Cmd + R (or click the Play button in Xcode).
+- The SwiftUI App will build and launch natively!

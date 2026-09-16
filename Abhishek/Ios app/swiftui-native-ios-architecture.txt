@@ -1,0 +1,246 @@
+================================================================================
+     NATIVE SWIFT & SWIFTUI IOS APP ARCHITECTURE & BACKEND INTEGRATION
+================================================================================
+
+1. NATIVE SWIFTUI PROJECT STRUCTURE (XCODE)
+--------------------------------------------------------------------------------
+
+EnterpriseTaskSystemIOS/
+├── EnterpriseTaskSystemApp.swift     # App Entry Point (@main)
+├── Info.plist                        # Permissions (Location, Camera, Photos)
+├── Assets.xcassets                   # Images, Icons, Colors
+│
+├── Models/                           # Codable Swift Data Structs (Matches Node.js DB)
+│   ├── User.swift                    # User model (id, name, email, role, token)
+│   ├── TaskItem.swift                # Task model (id, title, status, priority, subtasks)
+│   ├── AttendanceRecord.swift        # Attendance model (clockIn, clockOut, coordinates)
+│   ├── MessageItem.swift             # Chat message model (id, sender, text, timestamp)
+│   └── RAGQueryResponse.swift        # Gemini AI response model
+│
+├── Services/                         # Network & Storage Managers
+│   ├── APIManager.swift              # URLSession REST API Client (async/await)
+│   ├── KeychainService.swift         # Secure Token Storage in iOS Keychain
+│   ├── SocketManager.swift           # SocketIO-Client-Swift Engine
+│   └── LocationManager.swift         # CoreLocation Manager for Attendance Punch-In
+│
+├── ViewModels/                       # Observable ViewModel State Managers (@Observable / Combine)
+│   ├── AuthViewModel.swift           # Login, Signup, OTP state
+│   ├── TaskViewModel.swift           # Tasks list, status updates, task filtering
+│   ├── AttendanceViewModel.swift     # Clock in/out timers, location coordinates
+│   ├── ChatViewModel.swift           # Real-time chat messages & socket listener
+│   └── RAGViewModel.swift            # Gemini AI Document Q&A search state
+│
+└── Views/                            # SwiftUI Views & UI Components
+    ├── Auth/
+    │   ├── LoginView.swift           # User Login Screen
+    │   └── OTPVerificationView.swift # Mobile/Email OTP Screen
+    │
+    ├── Main/
+    │   └── MainTabView.swift         # Bottom Tab Bar Navigation
+    │
+    ├── Tasks/
+    │   ├── TaskListView.swift        # Task List & Filter Segmented Picker
+    │   ├── TaskDetailView.swift      # Task Details, Subtasks, Cloudinary Attachment
+    │   └── CreateTaskView.swift      # Create Task Form Sheet
+    │
+    ├── Attendance/
+    │   └── AttendanceClockView.swift # Geo-location Clock In/Out & Duration Timer
+    │
+    ├── Chat/
+    │   └── DirectChatView.swift      # Real-time Team Messaging UI
+    │
+    └── RAG/
+        └── RAGChatbotView.swift      # Gemini AI Document Assistant UI
+
+
+2. SWIFT DATA MODELS (MATCHING MONGOOSE SCHEMAS)
+--------------------------------------------------------------------------------
+
+// TaskItem.swift (Codable Swift struct matching Task.ts Mongoose schema)
+import Foundation
+
+struct TaskItem: Identifiable, Codable {
+    let id: String
+    let title: String
+    let description: String?
+    let status: TaskStatus
+    let priority: TaskPriority
+    let assigneeId: String?
+    let subtasks: [Subtask]?
+    let createdAt: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case title, description, status, priority, assigneeId, subtasks, createdAt
+    }
+}
+
+enum TaskStatus: String, Codable, CaseIterable {
+    case todo = "todo"
+    case inProgress = "in_progress"
+    case review = "review"
+    case completed = "completed"
+}
+
+enum TaskPriority: String, Codable {
+    case low, medium, high, urgent
+}
+
+struct Subtask: Identifiable, Codable {
+    var id: String { title }
+    let title: String
+    var isCompleted: Bool
+}
+
+
+3. API NETWORK MANAGER (URLSESSION WITH ASYNC / AWAIT)
+--------------------------------------------------------------------------------
+
+// APIManager.swift
+import Foundation
+
+class APIManager {
+    static let shared = APIManager()
+    private let baseURL = "http://YOUR_BACKEND_IP:5000/api"
+    
+    private init() {}
+    
+    func fetchTasks() async throws -> [TaskItem] {
+        guard let url = URL(string: "\(baseURL)/tasks") else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Attach JWT Token from Keychain
+        if let token = KeychainService.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        return try JSONDecoder().decode([TaskItem].self, from: data)
+    }
+    
+    func updateTaskStatus(taskId: String, newStatus: String) async throws -> TaskItem {
+        guard let url = URL(string: "\(baseURL)/tasks/\(taskId)") else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        if let token = KeychainService.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        let body: [String: String] = ["status": newStatus]
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(TaskItem.self, from: data)
+    }
+}
+
+
+4. REAL-TIME SOCKET.IO ENGINE FOR SWIFTUI
+--------------------------------------------------------------------------------
+
+// SocketManager.swift
+import Foundation
+import SocketIO
+
+class RealtimeSocketManager: ObservableObject {
+    static let shared = RealtimeSocketManager()
+    private var manager: SocketManager?
+    private var socket: SocketIOClient?
+    
+    @Published var isConnected = false
+    
+    private init() {}
+    
+    func connect() {
+        guard let token = KeychainService.shared.getToken() else { return }
+        
+        manager = SocketManager(socketURL: URL(string: "http://YOUR_BACKEND_IP:5000")!, config: [
+            .log(false),
+            .compress,
+            .connectParams(["token": token])
+        ])
+        
+        socket = manager?.defaultSocket
+        
+        socket?.on(clientEvent: .connect) { data, ack in
+            DispatchQueue.main.async {
+                self.isConnected = true
+            }
+        }
+        
+        // Listen for live task updates from Node.js backend
+        socket?.on("task:updated") { dataArray, ack in
+            NotificationCenter.default.post(name: NSNotification.Name("TaskUpdatedNotification"), object: nil)
+        }
+        
+        socket?.connect()
+    }
+    
+    func disconnect() {
+        socket?.disconnect()
+    }
+}
+
+
+5. SAMPLE SWIFTUI TASK BOARD VIEW
+--------------------------------------------------------------------------------
+
+// TaskListView.swift
+import SwiftUI
+
+struct TaskListView: View {
+    @StateObject private var viewModel = TaskViewModel()
+    @State private var selectedStatus: TaskStatus = .todo
+    
+    var body: some View {
+        NavigationStack {
+            VStack {
+                Picker("Status", selection: $selectedStatus) {
+                    ForEach(TaskStatus.allCases, id: \.self) { status in
+                        Text(status.rawValue.capitalized).tag(status)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                
+                List(viewModel.filteredTasks(status: selectedStatus)) { task in
+                    NavigationLink(destination: TaskDetailView(task: task)) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text(task.title)
+                                    .font(.headline)
+                                Spacer()
+                                Text(task.priority.rawValue.uppercased())
+                                    .font(.caption)
+                                    .padding(4)
+                                    .background(task.priority == .urgent ? Color.red.opacity(0.2) : Color.blue.opacity(0.2))
+                                    .cornerRadius(4)
+                            }
+                            Text(task.description ?? "No description")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Tasks Board")
+            .task {
+                await viewModel.loadTasks()
+            }
+        }
+    }
+}

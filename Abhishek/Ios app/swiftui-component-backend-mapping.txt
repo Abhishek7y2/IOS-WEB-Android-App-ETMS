@@ -1,0 +1,114 @@
+================================================================================
+     BACKEND MODULE TO NATIVE SWIFTUI COMPONENT DEEP MAPPING GUIDE
+================================================================================
+
+1. AUTHENTICATION MODULE MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Routes: /api/auth/login, /api/auth/register, /api/auth/verify-otp
+- Controller: authController.ts
+- Model: User.ts (JWT Tokens, Hashed Password, DPDP consent)
+
+SwiftUI iOS Implementation Requirements:
+- Swift Struct: struct User (Codable)
+- Storage Service: KeychainService.swift (Security.framework)
+- ViewModel: AuthViewModel.swift (@Published isAuthenticated, currentUser)
+- SwiftUI Views:
+  1. LoginView.swift: Email & Password textfields with native SecureField.
+  2. OTPVerificationView.swift: 6-digit PIN textfields.
+  3. SignupView.swift: Registration form with DPDP terms checkbox.
+- iOS Execution: On success, JWT token saved to iOS Keychain; User state changes to authenticated.
+
+
+2. TASK MANAGEMENT MODULE MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Routes: /api/tasks, /api/tasks/:id, /api/tasks/:id/status
+- Controller: taskController.ts, taskService.ts
+- Models: Task.ts, TaskAuditLog.ts
+
+SwiftUI iOS Implementation Requirements:
+- Swift Structs: struct TaskItem, enum TaskStatus, enum TaskPriority, struct Subtask
+- ViewModel: TaskViewModel.swift (@Published tasks, filteredTasks)
+- SwiftUI Views:
+  1. TaskListView.swift: Segmented Picker (Todo, In Progress, Review, Completed) + Filtered List.
+  2. TaskCardView.swift: Reusable Card displaying Title, Priority Badge (Color coded), Due Date.
+  3. TaskDetailView.swift: Subtasks checklist toggle, Edit Status picker, Attachment preview.
+  4. CreateTaskSheet.swift: Form sheet to add new task with assignees & due dates.
+- iOS Execution: Tap toggle sends PUT request to Node.js backend & updates state instantly.
+
+
+3. ATTENDANCE & GEOLOCATION MODULE MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Routes: /api/attendance/check-in, /api/attendance/check-out
+- Controller: attendanceController.ts, attendanceService.ts
+- Model: Attendance.ts (Clock In/Out timestamps, Geolocation latitude/longitude)
+
+SwiftUI iOS Implementation Requirements:
+- Native iOS Framework: CoreLocation.framework
+- Location Manager: LocationManager.swift (CLLocationManagerDelegate)
+- ViewModel: AttendanceViewModel.swift (Timer counter, shift duration calculation)
+- SwiftUI Views:
+  1. AttendanceClockView.swift: Large animated Punch In/Out button, Live timer clock, Map Pin preview.
+  2. MonthlyAttendanceCalendarView.swift: Monthly grid showing Present/Absent/Late days.
+- iOS Permissions: Info.plist NSLocationWhenInUseUsageDescription.
+
+
+4. LEAVE MANAGEMENT MODULE MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Routes: /api/leaves, /api/leaves/apply, /api/leaves/approve
+- Controller: leaveController.ts, leaveService.ts
+- Models: Leave.ts, LeaveBalance.ts (Casual, Sick, Earned balances)
+
+SwiftUI iOS Implementation Requirements:
+- Swift Structs: struct LeaveRequest, struct LeaveBalance
+- SwiftUI Views:
+  1. LeaveDashboardView.swift: Circular Progress Gauge for remaining leave balances.
+  2. ApplyLeaveSheet.swift: DatePicker for start/end dates, Leave Type Picker, Reason text area.
+  3. LeaveApprovalView.swift: Manager view with Approve / Reject action buttons.
+
+
+5. REAL-TIME CHAT MODULE MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Routes: /api/chat/history, /api/chat/send
+- Socket Server: socket.server.ts, event.publisher.ts
+- Models: Conversation.ts, Message.ts
+
+SwiftUI iOS Implementation Requirements:
+- Swift Dependency: SocketIO-Client-Swift package via Swift Package Manager
+- Manager: SocketManager.swift (Emits and listens for 'message:sent' socket events)
+- ViewModel: ChatViewModel.swift (Append incoming messages to live chat array)
+- SwiftUI Views:
+  1. ConversationListView.swift: Channels list (Direct Messages, Group Chat).
+  2. DirectChatView.swift: ScrollViewReader with LazyVStack message bubbles.
+  3. ChatBubbleView.swift: Left-aligned incoming bubble, Right-aligned user bubble.
+
+
+6. GOOGLE GEMINI AI RAG MODULE MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Routes: /api/rag/upload, /api/rag/query
+- Controller: ragController.ts, ragService.ts
+- Models: Document.ts, DocumentChunk.ts (Vector embeddings)
+
+SwiftUI iOS Implementation Requirements:
+- Swift Structs: struct RAGQueryRequest, struct RAGQueryResponse
+- ViewModel: RAGViewModel.swift (@Published answers, vectorSearchContext)
+- SwiftUI Views:
+  1. RAGAssistantView.swift: Chat Interface for company document intelligence.
+  2. DocumentUploaderSheet.swift: UIDocumentPickerViewController for uploading PDFs to RAG engine.
+
+
+7. CLOUDINARY MEDIA ATTACHMENTS MAPPING
+--------------------------------------------------------------------------------
+Backend Components:
+- Utility: cloudinary.ts (Cloudinary SDK configuration)
+
+SwiftUI iOS Implementation Requirements:
+- Native iOS Framework: PhotosUI (PhotosPicker)
+- SwiftUI Views:
+  1. MediaPickerView.swift: PhotosPicker for selecting photos/videos from iOS Gallery.
+  2. AsyncImagePreviewView.swift: SwiftUI AsyncImage to display Cloudinary URLs with cached loading.

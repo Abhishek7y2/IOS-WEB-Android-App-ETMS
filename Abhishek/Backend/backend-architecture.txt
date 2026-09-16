@@ -1,0 +1,164 @@
+================================================================================
+          MINI TASK MANAGEMENT SYSTEM - BACKEND ARCHITECTURE & FILE TREE
+================================================================================
+
+1. COMPLETE BACKEND FILE STRUCTURE (TREE VIEW)
+--------------------------------------------------------------------------------
+
+backend/
+├── .env                              # Environment variables (DB, Port, JWT keys, Gemini AI)
+├── .env.example                      # Example environment configuration template
+├── jest.config.js                    # Jest test runner configuration
+├── package.json                      # Dependencies and scripts (dev, build, start)
+├── tsconfig.json                     # TypeScript compiler configuration
+├── server.ts                         # Main Entry Point (HTTP Server + Socket.IO)
+└── src/
+    ├── app.ts                        # Express App Initialization & Middleware Registration
+    ├── server.ts                     # Production Server launcher with Cluster Mode support
+    ├── test_flow.ts                  # Integration flow runner script
+    │
+    ├── config/                       # System Configurations
+    │   └── db.ts                     # MongoDB Mongoose Connection Setup
+    │
+    ├── constants/                    # Application Constants & Enums
+    │
+    ├── controllers/                  # Express Request Handlers (11 Business Controllers)
+    │   ├── attendanceController.ts   # Clock In/Out, Geolocation & Work Duration
+    │   ├── authController.ts         # Signup, Login, OTP, JWT, Password Reset, DPDP
+    │   ├── chatController.ts         # Direct Messages, Group Chat & Room Messaging
+    │   ├── communicationController.ts # Broadcast Announcements & Team Notifications
+    │   ├── holidayController.ts      # Company Holiday Calendar CRUD
+    │   ├── leaveController.ts        # Employee Leave Application & Manager Approvals
+    │   ├── noteController.ts         # Personal & Work Notes Management
+    │   ├── notificationController.ts # User Notifications & Alert State Handlers
+    │   ├── profileController.ts      # User Profile Settings & Avatar Updates
+    │   ├── ragController.ts          # Document Upload, Embedding Generation & AI Q&A
+    │   └── taskController.ts         # Task Creation, Assignment, Subtasks & Status Updates
+    │
+    ├── middleware/                   # Request Processing & Security Pipeline (7 Middlewares)
+    │   ├── authMiddleware.ts         # JWT Access Token Verification & RBAC Guards
+    │   ├── chatRateLimiter.ts        # Spam Prevention on Chat Endpoints
+    │   ├── csrfMiddleware.ts         # Anti-CSRF Token Security for Web Clients
+    │   ├── errorHandler.ts           # Centralized Error Handling & Formatting
+    │   ├── notFoundHandler.ts        # 404 Route Catching Middleware
+    │   ├── validateRequest.ts        # TypeScript / Zod Payload Schema Validator
+    │   └── xssSanitizer.ts           # Malicious XSS Payload Sanitization
+    │
+    ├── models/                       # Mongoose Database Models & Schemas (22 Schemas)
+    │   ├── Announcement.ts           # Company-wide announcements schema
+    │   ├── Attendance.ts             # Daily attendance, clock in/out & coordinates
+    │   ├── ChatHistory.ts            # Chat room activity history schema
+    │   ├── ChatLibrary.ts            # Pre-configured responses library
+    │   ├── ChatProject.ts            # Project-level chat context schema
+    │   ├── Conversation.ts          # Group & Direct message channel schema
+    │   ├── ConversationMemory.ts     # AI Chatbot conversation memory history
+    │   ├── Document.ts               # Uploaded PDF file metadata schema
+    │   ├── DocumentChunk.ts          # Vector embeddings & text chunk schema
+    │   ├── EmailVerification.ts      # Email verification tokens schema
+    │   ├── FastTrack.ts              # Priority task workflow schema
+    │   ├── Holiday.ts                # Organization holiday list schema
+    │   ├── Leave.ts                  # Employee leave request schema
+    │   ├── LeaveBalance.ts           # Annual casual/sick leave quotas schema
+    │   ├── Message.ts                # Individual chat message schema
+    │   ├── Note.ts                   # User sticky notes schema
+    │   ├── Notification.ts           # System alert notifications schema
+    │   ├── OtpRateLimit.ts           # Rate limit tracker for OTP generation
+    │   ├── PhoneVerification.ts      # Mobile number OTP verification schema
+    │   ├── Task.ts                   # Core Task schema (Status, Subtasks, Priority)
+    │   ├── TaskAuditLog.ts           # Immutable audit log trail for task edits
+    │   └── User.ts                   # User Account schema (Roles, Passwords, Tokens)
+    │
+    ├── realtime/                     # Socket.IO Real-Time Engine
+    │   ├── event.publisher.ts        # Event Broadcaster (Task updates, chat messages)
+    │   ├── event.types.ts            # TypeScript definitions for socket events
+    │   ├── socket.auth.ts            # Socket connection JWT authentication
+    │   ├── socket.rooms.ts           # User and channel room join/leave logic
+    │   └── socket.server.ts          # Socket.IO Server Initialization & Configuration
+    │
+    ├── routes/                       # Express Endpoint Route Definitions (11 Routes)
+    │   ├── attendanceRoutes.ts       # /api/attendance endpoints
+    │   ├── authRoutes.ts             # /api/auth endpoints (Login, Signup, Refresh)
+    │   ├── chatRoutes.ts             # /api/chat endpoints (Messages, History)
+    │   ├── communicationRoutes.ts   # /api/communication endpoints
+    │   ├── holidayRoutes.ts          # /api/holidays endpoints
+    │   ├── leaveRoutes.ts            # /api/leaves endpoints
+    │   ├── noteRoutes.ts             # /api/notes endpoints
+    │   ├── notificationRoutes.ts     # /api/notifications endpoints
+    │   ├── profileRoutes.ts          # /api/profile endpoints
+    │   ├── ragRoutes.ts              # /api/rag endpoints (Upload, Query)
+    │   └── taskRoutes.ts             # /api/tasks endpoints (CRUD, Assign)
+    │
+    ├── services/                     # Business Logic & Integration Layer
+    │   ├── attendanceService.ts      # Duration calculation & shift totals
+    │   ├── communicationService.ts   # Message parsing, unread counts & links
+    │   ├── leaveService.ts           # Quota verification & approval logic
+    │   ├── otpLimiter.ts             # OTP request threshold limiter
+    │   ├── taskService.ts            # Task workflow, subtasks & audit recorder
+    │   ├── chatbot/                  # Conversational AI memory services
+    │   └── rag/                      # Document text extraction & vector engine
+    │
+    ├── types/                        # TypeScript Interfaces & Global Type Declarations
+    ├── utils/                        # Utility Helpers (JWT, Cloudinary, Mailer, Crypto)
+    └── validators/                   # Request Payload Validation Logic
+
+
+2. SYSTEM ARCHITECTURE & DATA FLOW
+--------------------------------------------------------------------------------
+
++------------------------------------------------------------------------------+
+|                             CLIENT APPLICATION LAYER                         |
+|   Next.js 16 Web Dashboard   |   Expo React Native Mobile   |   iOS Native App   |
++------------------------------------+-----------------------------------------+
+                                     |
+                          HTTPS REST | WebSockets (WSS)
+                                     v
++------------------------------------------------------------------------------+
+|                         SERVER ENTRY POINT & SECURITY                        |
+|   1. server.ts (HTTP + Socket.IO Server Cluster Launcher)                    |
+|   2. app.ts (Express Configuration & /api Routing)                           |
+|   3. Middleware Security (CORS -> Helmet -> XSS -> CSRF -> JWT Auth Guard)   |
++------------------------------------+-----------------------------------------+
+                                     |
+                                     v
++------------------------------------------------------------------------------+
+|                           CONTROLLERS & SERVICES                             |
+|   Routes match endpoint -> Controller handles request -> Service runs logic   |
++------------------------------------+-----------------------------------------+
+                                     |
+                 +-------------------+-------------------+
+                 |                                       |
+                 v                                       v
++-----------------------------------+   +--------------------------------------+
+|       DATABASE PERSISTENCE        |   |           REAL-TIME ENGINE           |
+|   MongoDB Atlas (22 Models)       |   |   Socket.IO Event Publisher          |
+|   - Task & TaskAuditLog           |   |   - Broadcasts 'task:updated'        |
+|   - User & Attendance             |   |   - Broadcasts 'message:sent'        |
+|   - Conversation & DocumentChunk  |   |   - Instant UI Sync Across Clients   |
++-----------------------------------+   +--------------------------------------+
+
+
+3. HOW THE BACKEND WORKS (STEP-BY-STEP WORKFLOW)
+--------------------------------------------------------------------------------
+
+Step 1: Application Launch
+- `server.ts` connects to MongoDB Atlas using `config/db.ts`.
+- `server.ts` starts Express server on configured port and attaches Socket.IO.
+
+Step 2: Incoming Request & Security Check
+- Client sends HTTP request (e.g., PUT /api/tasks/123 to update task status).
+- Request passes through `middleware/authMiddleware.ts` to verify JWT access token.
+- `middleware/xssSanitizer.ts` ensures no malicious payload enters the application.
+
+Step 3: Route & Controller Handling
+- Request hits `routes/taskRoutes.ts`, which forwards it to `controllers/taskController.ts`.
+- Controller extracts task ID, user permissions, and updated fields.
+
+Step 4: Business Logic & Audit Trail
+- Controller calls `services/taskService.ts` to execute business rules.
+- Service updates `models/Task.ts` in MongoDB.
+- Service creates a new record in `models/TaskAuditLog.ts` for immutable tracking.
+
+Step 5: Real-Time Synchronization & Response
+- `realtime/event.publisher.ts` emits a Socket.IO event to all assigned team members.
+- Client receives instant 200 OK JSON response.
+- Connected Web and Mobile apps reflect the updated status immediately.

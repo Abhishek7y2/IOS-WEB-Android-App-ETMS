@@ -1,0 +1,50 @@
+================================================================================
+     COMPLETE XCODE SETUP & PROJECT IMPLEMENTATION GUIDE ON MACOS
+================================================================================
+
+PHASE 1: INSTALLING & SETTING UP XCODE ON MAC
+--------------------------------------------------------------------------------
+1. Open the Mac App Store on your macOS device.
+2. In the search bar at top-left, type "Xcode" and press Enter.
+3. Click the "Get" or "Install" button (Xcode is free by Apple).
+4. Once downloaded, launch Xcode from Applications or Launchpad.
+5. On the first launch, click "Install" to install the required macOS Command Line Tools.
+
+
+PHASE 2: CREATING THE SWIFTUI PROJECT IN XCODE
+--------------------------------------------------------------------------------
+1. Launch Xcode -> Click "Create New Xcode Project" (or File -> New -> Project).
+2. Under the "iOS" tab, select "App" and click Next.
+3. Fill in the Project Options:
+   - Product Name: EnterpriseTaskSystemIOS
+   - Organization Identifier: com.enterprisetasksystem
+   - Interface: Select "SwiftUI"
+   - Language: Select "Swift"
+4. Click Next, choose your save directory (e.g., inside your project directory), and click Create.
+
+
+PHASE 3: IMPORTING PRE-BUILT SWIFT SOURCE FILES
+--------------------------------------------------------------------------------
+1. Open Finder on your Mac and navigate to:
+   IOS app/EnterpriseTaskSystemIOS/
+2. Drag and drop the following files and folders into the left Project Navigator sidebar in Xcode:
+   ├── EnterpriseTaskSystemApp.swift
+   ├── Models/ (TaskItem.swift, MessageItem.swift)
+   ├── Services/ (APIManager.swift, KeychainService.swift, LocationManager.swift, SocketManager.swift)
+   ├── ViewModels/ (AuthViewModel.swift, TaskViewModel.swift, AttendanceViewModel.swift, ChatViewModel.swift, RAGViewModel.swift)
+   └── Views/ (LoginView.swift, MainTabView.swift, TaskListView.swift, AttendanceClockView.swift, DirectChatView.swift, RAGChatbotView.swift, ProfileView.swift)
+3. In the Xcode import options dialog:
+   - Check "Copy items if needed"
+   - Select "Create groups"
+   - Ensure "EnterpriseTaskSystemIOS" target is checked
+   - Click Finish.
+
+
+PHASE 4: CONFIGURING BACKEND IP & RUNNING THE APP
+--------------------------------------------------------------------------------
+1. Open Services/APIManager.swift in Xcode.
+2. Set your Node.js backend server URL:
+   private let baseURL = "http://YOUR_MAC_IP:5000/api"
+3. In the top toolbar of Xcode, click the target device dropdown (next to the Play button) and select "iPhone 15 Pro" or "iPhone 16 Pro".
+4. Press Cmd + R (or click the Play button in top-left).
+5. Xcode will build and launch your Native SwiftUI iOS App in the iOS Simulator!

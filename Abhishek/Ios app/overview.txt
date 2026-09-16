@@ -1,0 +1,14 @@
+IOS APP MODULE OVERVIEW
+
+
+1. MODULE PURPOSE
+
+This folder contains native iOS app configurations and Swift code.
+It provides native iOS integration for the task management system.
+
+
+2. KEY FEATURES
+
+Xcode workspace settings and CocoaPods configuration.
+Native iOS device camera and location permission handling.
+REST and Socket client connection to backend API.

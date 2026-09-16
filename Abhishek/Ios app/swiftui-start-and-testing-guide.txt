@@ -1,0 +1,58 @@
+================================================================================
+         HOW TO START & TEST NATIVE SWIFTUI IOS APP STEP-BY-STEP
+================================================================================
+
+1. HOW TO START THE SWIFTUI APP IN XCODE
+--------------------------------------------------------------------------------
+Step 1: Open Xcode on your Mac.
+Step 2: Click "Create New Project" -> Select "iOS" -> Select "App" -> Click Next.
+Step 3: Enter Product Name: EnterpriseTaskSystemIOS.
+        Select Interface: SwiftUI.
+        Select Language: Swift.
+        Click Create.
+Step 4: Open Finder and navigate to your project directory:
+        IOS app/EnterpriseTaskSystemIOS/
+Step 5: Drag and drop all Swift files into the Xcode left sidebar (Project Navigator):
+        - EnterpriseTaskSystemApp.swift
+        - Models/ (TaskItem.swift, MessageItem.swift)
+        - Services/ (APIManager.swift, KeychainService.swift, LocationManager.swift, SocketManager.swift)
+        - ViewModels/ (AuthViewModel.swift, TaskViewModel.swift, AttendanceViewModel.swift, ChatViewModel.swift, RAGViewModel.swift)
+        - Views/ (LoginView.swift, MainTabView.swift, TaskListView.swift, AttendanceClockView.swift, DirectChatView.swift, RAGChatbotView.swift, ProfileView.swift)
+Step 6: Open Services/APIManager.swift in Xcode and update your server IP address:
+        private let baseURL = "http://YOUR_SERVER_IP:5000/api"
+Step 7: In Xcode top bar, select "iPhone 15 Pro" or "iPhone 16 Pro" Simulator.
+Step 8: Press Cmd + R (or click the top-left Play button) to build and run.
+
+
+2. HOW TO CHECK AND VERIFY ALL FEATURES
+--------------------------------------------------------------------------------
+
+Test Flow 1: Authentication & Keychain Check
+- App launches on LoginView.swift.
+- Enter email and password, click "Sign In".
+- Verification: JWT token is saved in iOS Keychain, and screen automatically transitions to MainTabView.swift.
+
+Test Flow 2: Tasks Board & Filter Check
+- Tap "Tasks" tab in bottom navigation bar.
+- Verification: TaskListView fetches tasks from Node.js Express backend.
+- Tap segmented picker tabs (Todo, In Progress, Review, Completed) to verify filtering and priority color badges.
+
+Test Flow 3: Geolocation Attendance Punch Check
+- Tap "Attendance" tab in bottom navigation bar.
+- iOS Simulator asks for Location permission -> Tap "Allow While Using App".
+- Tap big green "PUNCH IN" button.
+- Verification: Button turns Red ("PUNCH OUT"), GPS coordinates display on screen, and live timer 00:00:01 starts counting up!
+
+Test Flow 4: Real-Time Team Chat Check
+- Tap "Chat" tab in bottom navigation bar.
+- Type a message and tap send paperplane button.
+- Verification: Message bubble appears on screen and sends live data via Socket.IO.
+
+Test Flow 5: Google Gemini AI RAG Bot Check
+- Tap "AI Bot" tab in bottom navigation bar.
+- Type a query (e.g., "What is the attendance policy?").
+- Verification: Gemini AI engine returns contextual document answer.
+
+Test Flow 6: Profile & Logout Check
+- Tap "Profile" tab -> Tap "Sign Out".
+- Verification: Keychain token is cleared, and app returns to LoginView.

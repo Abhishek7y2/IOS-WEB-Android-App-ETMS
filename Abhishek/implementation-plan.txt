@@ -1,0 +1,104 @@
+IMPLEMENTATION PLAN FOR ENTERPRISE MINI TASK MANAGEMENT SYSTEM
+
+
+1. PROJECT OVERVIEW
+
+The project is an enterprise employee task and work management system.
+It features a Node.js TypeScript backend API.
+It includes a Next.js 16 web dashboard portal.
+It includes a React Native Expo mobile application.
+It includes a dedicated iOS App module directory.
+It features real-time socket communication and Google Gemini AI RAG capabilities.
+
+
+2. SYSTEM ARCHITECTURE AND STACK
+
+Backend API runs on Node.js with Express and TypeScript.
+Database uses MongoDB Atlas with Mongoose schemas.
+Real-time features use Socket.IO for live task updates and chat.
+AI capabilities use Google Gemini AI for document RAG querying.
+Web frontend uses Next.js 16 with React 19 and Tailwind CSS.
+Mobile application uses React Native with Expo SDK 57.
+iOS App workspace directory handles native iOS and Xcode integrations.
+
+
+3. BACKEND MODULE IMPLEMENTATION
+
+Set up Express TypeScript server with clustering support.
+Implement MongoDB connection using Mongoose.
+Create authentication system using JWT tokens and bcrypt.
+Add role based access control for superadmin admin and member roles.
+Build task controller for task creation update status and assignment.
+Build attendance controller for geolocation check-in and check-out.
+Build leave manager controller for casual sick and earned leaves.
+Build chat controller for direct messaging and group communication.
+Build RAG controller using Gemini AI for vector search on documents.
+
+
+4. WEB FRONTEND IMPLEMENTATION
+
+Set up Next.js 16 App Router structure.
+Create authentication context and protected route middleware.
+Build admin dashboard with key metrics and progress charts.
+Build interactive task management board with Kanban and list views.
+Build attendance tracking view with monthly calendar.
+Build leave request and approval interface for managers.
+Build real-time chat interface with direct and group channels.
+Build AI document assistant interface for company Q and A.
+
+
+5. MOBILE APP IMPLEMENTATION
+
+Set up Expo React Native TypeScript project structure.
+Configure React Navigation for main stack and tab navigation.
+Build login and profile management screens.
+Build mobile task view with priority indicators and subtask checklist.
+Build mobile attendance check-in screen with location capture.
+Build mobile chat screen with live push notifications.
+Implement Cloudinary media picker for task image attachments.
+
+
+6. IOS APP MODULE INTEGRATION
+
+Initialize iOS App project workspace in the dedicated folder.
+Configure Xcode settings and iOS deployment target version.
+Setup CocoaPods dependencies and Swift packages.
+Link iOS app API client to backend REST and Socket endpoints.
+Ensure native iOS camera and location permissions for attendance.
+
+
+7. REAL-TIME ENGINE AND SOCKET INTEGRATION
+
+Initialize Socket.IO server on backend API launcher.
+Define socket events for task updates and status changes.
+Define socket channels for team chat and direct messages.
+Implement real-time broadcast system for high priority announcements.
+Connect Web and Mobile client socket listeners to update live state.
+
+
+8. AI RAG DOCUMENT ENGINE INTEGRATION
+
+Configure Google Gemini AI SDK on the backend server.
+Implement PDF document parsing and text chunking pipeline.
+Generate vector embeddings for document text chunks.
+Store document embeddings in MongoDB database.
+Implement search query matching and prompt generation for Gemini AI.
+
+
+9. TESTING AND VERIFICATION PLAN
+
+Run backend unit tests and API endpoint verification.
+Test authentication flow and permission enforcement.
+Verify web dashboard layout responsiveness and state sync.
+Verify mobile application screens on iOS simulator and Android emulator.
+Verify Socket.IO live notifications across web and mobile.
+Verify Gemini AI document RAG response accuracy.
+
+
+10. DEPLOYMENT AND ENVIRONMENT CONFIGURATION
+
+Set up production environment variables for backend database and AI keys.
+Deploy backend API to cloud hosting server.
+Deploy Next.js web application to Vercel or cloud web host.
+Build Expo mobile application bundle for deployment.
+Verify end-to-end integration across all system components.

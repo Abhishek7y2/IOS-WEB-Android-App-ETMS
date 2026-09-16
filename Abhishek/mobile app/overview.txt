@@ -1,0 +1,16 @@
+MOBILE APP MODULE OVERVIEW
+
+
+1. MODULE PURPOSE
+
+This folder contains mobile app components and configurations.
+It is built with React Native and Expo SDK 57.
+It provides cross platform mobile access for employees.
+
+
+2. KEY FEATURES
+
+Mobile attendance check-in with geolocation.
+Task lifecycle management and status updates.
+Real-time push notifications and group chat.
+Cloudinary media picker for task attachments.
