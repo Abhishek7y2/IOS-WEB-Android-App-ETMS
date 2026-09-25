@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -16,6 +17,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const [isMock, setIsMock] = React.useState(false);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+  const isAdmin = checkIsAdmin(user);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -34,8 +37,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       return next;
     });
   };
-
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.designation?.toLowerCase() === 'admin' || user?.designation?.toLowerCase() === 'ceo' || user?.designation?.toLowerCase() === 'project manager';
 
   const navigation = [
     {
@@ -62,15 +63,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       icon: (
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-    },
-    {
-      name: 'Chatbot',
-      href: '/chatbot',
-      icon: (
-        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
     },
@@ -122,16 +114,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </svg>
       ),
     });
-
-    navigation.push({
-      name: 'Document RAG',
-      href: '/chatbot?view=rag',
-      icon: (
-        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
-    });
   }
 
   // Add Settings at the very end for all users
@@ -180,15 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
         <nav className="space-y-1">
           {navigation.map((item) => {
-            const isActive = (() => {
-              if (item.name === 'Document RAG') {
-                return pathname === '/chatbot' && searchParams.get('view') === 'rag';
-              }
-              if (item.name === 'Chatbot') {
-                return pathname === '/chatbot' && searchParams.get('view') !== 'rag';
-              }
-              return pathname === item.href;
-            })();
+            const isActive = pathname === item.href;
             
             return (
               <Link

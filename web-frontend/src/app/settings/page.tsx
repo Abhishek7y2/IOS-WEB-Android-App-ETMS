@@ -16,6 +16,7 @@ import { sanitizePhoneNumber, validatePhoneNumber } from '../../utils/phoneValid
 import ProfileCompletionCard from '../../components/profile/ProfileCompletionCard';
 import ImageCropperModal from '../../components/profile/ImageCropperModal';
 import { exportUserDataPDF } from '@/utils/exportPDF';
+import { isAdmin as checkIsAdmin, getDisplayRole } from '@/utils/permissions';
 
 const reactSelectClassNames = {
   control: () => '!bg-transparent !border-2 !border-zinc-600 dark:!border-zinc-600 !rounded-xl !shadow-none !py-0.5',
@@ -611,7 +612,7 @@ export default function SettingsPage() {
               </button>
 
               {/* Delete My Account Tab (ONLY for regular employees, NOT Admin or Super Admin) */}
-              {user?.role !== 'admin' && user?.role !== 'superadmin' && (
+              {!checkIsAdmin(user) && (
                 <button
                   type="button"
                   onClick={() => setActiveTab('danger')}
@@ -753,7 +754,7 @@ export default function SettingsPage() {
                   <div className="flex flex-col items-center md:items-start md:pl-[160px] pb-6 mt-16 md:mt-2">
                     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white font-outfit">{user?.name}</h2>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-                      {user?.role === 'superadmin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'Employee'}
+                      {getDisplayRole(user)}
                     </p>
                   </div>
 
@@ -823,7 +824,7 @@ export default function SettingsPage() {
                         </div>
                         <div className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/40">
                           <span className="block text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Role</span>
-                          <span className="text-sm font-semibold text-zinc-900 dark:text-white mt-0.5 block capitalize">{user?.role === 'superadmin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'Employee'}</span>
+                          <span className="text-sm font-semibold text-zinc-900 dark:text-white mt-0.5 block capitalize">{getDisplayRole(user)}</span>
                         </div>
                       </div>
                       <div className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/40">
@@ -1136,7 +1137,7 @@ export default function SettingsPage() {
                           id="settings-role"
                           type="text"
                           placeholder=" "
-                          defaultValue={user?.role}
+                          defaultValue={getDisplayRole(user)}
                           readOnly
                           className={`${inputBase} ${inputDisabled} px-3.5 py-3 capitalize`}
                         />

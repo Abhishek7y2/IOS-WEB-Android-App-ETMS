@@ -93,6 +93,7 @@ export const registerValidation = [
 
 export const loginValidation = [
   body('password')
+    .notEmpty().withMessage('Password is required')
     .isLength({ max: 128 }).withMessage(VALIDATION_MESSAGES.AUTH.PASSWORD_TOO_LONG),
   body().custom((value) => {
     if (!value.email && !value.mobileNumber) {

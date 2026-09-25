@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { CalendarDays, ChevronDown, Pencil, Trash2, UserRound, Eye, Paperclip } from 'lucide-react';
 import { Task } from '../../types';
 import { formatDate } from '../../utils/format';
 import { useTasks } from '../../context/TaskContext';
 import { StatusBadge } from './StatusBadge';
 import { useAuth } from '../../context/AuthContext';
+import { isAdmin as checkIsAdmin } from '../../utils/permissions';
 
 interface TaskCardProps {
   task: Task;
@@ -33,7 +35,7 @@ const statuses: Array<{ value: Task['status']; label: string }> = [
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onStatusChange, onDelete, onEdit, onView }) => {
   const { employees } = useTasks();
   const { user } = useAuth();
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin');
+  const isAdmin = checkIsAdmin(user);
   const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
   const employee = employees.find((emp) => emp.id === task.assignedTo);
   const employeeName = employee ? employee.name : 'Unassigned';
@@ -44,7 +46,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onStatusChange, onDele
   };
 
   return (
-    <article className="relative flex min-h-72 flex-col rounded-lg border border-zinc-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700">
+    <motion.article 
+      whileHover={{ y: -5 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="relative flex min-h-72 flex-col rounded-lg border border-zinc-200 bg-white p-5 shadow-sm transition-all duration-300 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700">
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-2">
           <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold uppercase tracking-wide ${priorityColors[task.priority]}`}>
@@ -150,6 +155,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onStatusChange, onDele
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };

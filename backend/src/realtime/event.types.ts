@@ -10,7 +10,8 @@ export type EventType =
   | 'attendance.checked_out'
   | 'announcement.created'
   | 'message.created'
-  | 'notification.created';
+  | 'notification.created'
+  | 'auth.force_logout';
 
 export interface EventEnvelope<T = any> {
   eventId: string;

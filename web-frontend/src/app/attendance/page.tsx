@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
 import { useAttendance, AttendanceProvider } from '../../context/AttendanceContext';
 import { AttendanceActions } from '../../components/attendance/AttendanceActions';
 import { AttendanceSummaryCards } from '../../components/attendance/AttendanceSummaryCards';
@@ -12,7 +13,7 @@ import { AttendanceRecord } from '../../types/attendance';
 
 const AttendanceContent = () => {
   const { user } = useAuth();
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.role === 'Admin' || user?.role === 'HR';
+  const isAdmin = checkIsAdmin(user);
   
   const { records, loading, fetchRecords, fetchTodayRecord, fetchAnalytics } = useAttendance();
   const [filters, setFilters] = useState({ search: '', status: '', date: '', workMode: '', department: '' });

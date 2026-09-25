@@ -89,9 +89,8 @@ export class CommunicationService {
 
     const filter: any = { participants: userId };
 
-    if (queryParams.all === 'true' && (user?.role === 'admin' || user?.role === 'superadmin')) {
-      delete filter.participants;
-    }
+    // WhatsApp style privacy: Admins cannot see chats they aren't part of.
+    // Removed `all=true` bypass for admins.
 
     if (type) filter.type = type;
     if (isArchived === 'true') filter.isArchived = true;
@@ -112,10 +111,10 @@ export class CommunicationService {
     const conversation = await Conversation.findById(id);
     if (!conversation) throw { status: 404, message: 'Conversation not found.' };
 
-    const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
     const isParticipant = conversation.participants.some((p) => p.toString() === user?._id.toString());
 
-    if (!isAdmin && !isParticipant) {
+    // WhatsApp style privacy: Must be a participant
+    if (!isParticipant) {
       throw { status: 403, message: 'Forbidden. You are not a participant in this conversation.' };
     }
 
@@ -132,10 +131,6 @@ export class CommunicationService {
 
     if (!subject || !subject.trim()) {
       throw { status: 400, message: 'Subject is required.' };
-    }
-
-    if (!content || !content.trim()) {
-      throw { status: 400, message: 'Message content is required.' };
     }
 
     const recipients = await User.find({ _id: { $in: to } }, 'name profilePicture');
@@ -166,34 +161,49 @@ export class CommunicationService {
       createdBy: userId,
     });
 
-    const message = await Message.create({
-      conversationId: conversation._id.toString(),
-      senderId: userId,
-      senderName: sender?.name || 'You',
-      senderAvatar: sender?.profilePicture || '',
-      content,
-      timestamp: new Date(),
-      status: 'sent',
-      attachments: attachments || [],
-      mentions: [],
-      isEdited: false,
-    });
+    let formattedMessage = null;
+    let messageId = undefined;
 
-    const notifications = to.map((recipientId: string) => ({
-      recipientId,
-      senderId: userId,
-      senderName: sender?.name || 'You',
-      senderAvatar: sender?.profilePicture || '',
-      type: 'message',
-      referenceId: conversation._id.toString(),
-      message: `New message from ${sender?.name || 'You'}: ${content.substring(0, 50)}...`,
-    }));
-    await Notification.insertMany(notifications);
+    if (content && content.trim()) {
+      const message = await Message.create({
+        conversationId: conversation._id.toString(),
+        senderId: userId,
+        senderName: sender?.name || 'You',
+        senderAvatar: sender?.profilePicture || '',
+        content,
+        timestamp: new Date(),
+        status: 'sent',
+        attachments: attachments || [],
+        mentions: [],
+        isEdited: false,
+      });
 
-    return {
-      conversation: formatConversation(conversation),
-      message: formatMessage(message),
-    };
+      messageId = message._id;
+      formattedMessage = formatMessage(message);
+
+      const notifications = recipients.map((r) => ({
+        recipientId: r._id.toString(),
+        senderId: userId,
+        senderName: sender?.name || 'You',
+        senderAvatar: sender?.profilePicture || '',
+        type: 'message',
+        referenceId: conversation._id.toString(),
+        message: `New message from ${sender?.name || 'You'}: ${content.substring(0, 50)}...`,
+      }));
+      await Notification.insertMany(notifications);
+    }
+
+    const formattedConversation = formatConversation(conversation);
+    const orgRoom = `org:${user?.organizationId || 'main'}`;
+
+    if (formattedMessage) {
+        publishEvent('message.created', { messageId: messageId, message: formattedMessage, conversationId: conversation._id.toString() }, [orgRoom, `conv:${conversation._id.toString()}`], {
+          actorId: user?._id?.toString(),
+          organizationId: user?.organizationId || 'main',
+        });
+    }
+
+    return formattedConversation;
   }
 
   async updateConversation(id: string, updates: any) {
@@ -214,14 +224,24 @@ export class CommunicationService {
     const conversation = await Conversation.findById(conversationId);
     if (!conversation) throw { status: 404, message: 'Conversation not found.' };
 
-    const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
     const isParticipant = conversation.participants.some((p) => p.toString() === user?._id.toString());
 
-    if (!isAdmin && !isParticipant) {
+    // WhatsApp style privacy: Must be a participant
+    if (!isParticipant) {
       throw { status: 403, message: 'Forbidden. You are not a participant in this conversation.' };
     }
 
     const messages = await Message.find({ conversationId }).sort({ timestamp: 1 });
+
+    // Mark conversation and notifications as read when fetched
+    await Conversation.findByIdAndUpdate(conversationId, { unreadCount: 0, isRead: true });
+    if (user?._id) {
+      await Notification.updateMany(
+        { recipientId: user._id.toString(), referenceId: conversationId, type: 'message' },
+        { $set: { isRead: true } }
+      );
+    }
+
     return messages.map(formatMessage);
   }
 
@@ -236,10 +256,10 @@ export class CommunicationService {
     const conversationCheck = await Conversation.findById(conversationId);
     if (!conversationCheck) throw { status: 404, message: 'Conversation not found.' };
 
-    const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
     const isParticipant = conversationCheck.participants.some((p) => p.toString() === userId);
 
-    if (!isAdmin && !isParticipant) {
+    // WhatsApp style privacy: Must be a participant to send
+    if (!isParticipant) {
       throw { status: 403, message: 'Forbidden. You cannot send messages to this conversation.' };
     }
 
@@ -485,9 +505,6 @@ export class CommunicationService {
     const userRole = user?.role;
 
     if (!userId || !userRole) throw { status: 401, message: 'Unauthorized.' };
-    if (userRole !== 'admin' && userRole !== 'superadmin') {
-      throw { status: 403, message: 'Only admins and superadmins can create groups.' };
-    }
 
     const { groupName, participants, relatedTaskId, initialMessage } = body;
     if (!groupName || !participants || !Array.isArray(participants)) {

@@ -95,6 +95,8 @@ taskSchema.index({ assignedBy: 1 });
 taskSchema.index({ status: 1 });
 taskSchema.index({ dueDate: 1 });
 taskSchema.index({ assignedTo: 1, status: 1 }); // Compound index for common queries
+taskSchema.index({ assignedTo: 1, isArchived: 1 }); // Fast dashboard queries
+taskSchema.index({ dueDate: 1, status: 1 }); // Fast deadline tracking
 
 
 

@@ -89,6 +89,9 @@ const messageSchema = new Schema<IMessage>(
   }
 );
 
+messageSchema.index({ senderId: 1, createdAt: -1 }); // Fast query for user's messages
+messageSchema.index({ conversationId: 1, createdAt: -1 }); // Fast query for chat history
+
 const Message = model<IMessage>('Message', messageSchema);
 
 export default Message;

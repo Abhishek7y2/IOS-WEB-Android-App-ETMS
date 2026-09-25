@@ -9,6 +9,8 @@ import React, {
   useCallback,
 } from 'react';
 import { useRouter } from 'next/navigation';
+import { socketClient } from '../services/socketClient';
+import toast from 'react-hot-toast';
 import {
   forgotPassword as forgotPasswordApi,
   loginUser,
@@ -95,6 +97,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setInitializing(false);
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    
+    socketClient.connect();
+    const unsub = socketClient.subscribe('auth.force_logout', (envelope: any) => {
+      if (envelope.data?.userId === user.id) {
+        toast.error('Your session was terminated by an administrator.');
+        // Fast UI clear
+        setUser(null);
+        setToken(null);
+        window.localStorage.removeItem(AUTH_STORAGE_KEYS.user);
+        window.localStorage.removeItem(AUTH_STORAGE_KEYS.token);
+        router.push('/login');
+      }
+    });
+
+    return () => unsub();
+  }, [user, router]);
 
   const persistAuth = useCallback((authUser: AuthUser, authToken: string) => {
     setUser(authUser);

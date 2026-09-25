@@ -7,6 +7,7 @@ import { requestLoginOtp, loginWithOtp } from '../../api/auth';
 import { Eye, EyeOff, Mail, Lock, ClipboardCheck, Phone, Clock, ArrowLeft, User, Briefcase, Network, CheckCircle } from 'lucide-react';
 import { validateMobileNumber } from '../../utils/phoneValidator';
 import { countries } from '../../constants/countries';
+import { isValidEmail } from '../../utils/emailValidator';
 
 const inputBase =
   'peer w-full rounded-xl border-2 shadow-sm text-sm text-zinc-950 dark:text-zinc-50 bg-white dark:bg-zinc-900 outline-none transition duration-150 focus:ring-2 placeholder-transparent focus:placeholder-zinc-600 dark:focus:placeholder-zinc-600';
@@ -63,7 +64,6 @@ export default function LoginPage() {
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [unverifiedEmail, setUnverifiedEmail] = useState('');
 
-  const emailRegex = /^(?!\.)(?!.*\.\.)[a-zA-Z0-9._%+-]+(?<!\.)@[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,4}$/;
 
   // ── OTP Timer & Click Outside ───────────────────────────────────────────────
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function LoginPage() {
 
     if (mode === 'email') {
       if (!email.trim()) { setEmailError('Please enter an email address.'); hasError = true; }
-      else if (!emailRegex.test(email)) { setEmailError('Please enter a valid email address.'); hasError = true; }
+      else if (!isValidEmail(email)) { setEmailError('Please enter a valid email address.'); hasError = true; }
     } else {
       if (!mobileNumber.trim()) { setMobileError('Please enter a mobile number.'); hasError = true; }
       else {
@@ -212,7 +212,7 @@ export default function LoginPage() {
 
     if (mode === 'email') {
       if (!email.trim()) { setEmailError('Please enter an email address.'); return; }
-      if (!emailRegex.test(email)) { setEmailError('Please enter a valid email address.'); return; }
+      if (!isValidEmail(email)) { setEmailError('Please enter a valid email address.'); return; }
       payload.email = email;
     } else {
       if (!mobileNumber.trim()) { setMobileError('Please enter a mobile number.'); return; }

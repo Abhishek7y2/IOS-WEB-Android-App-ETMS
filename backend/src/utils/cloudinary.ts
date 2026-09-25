@@ -29,7 +29,8 @@ export async function uploadToCloudinary(base64Image: string, userName: string):
   }
 
   if (!isCloudinaryConfigured) {
-    return defaultAvatar;
+    console.log('cloudinary.ts: Cloudinary not configured. Returning raw base64 image to be stored in database.');
+    return base64Image;
   }
 
   try {
@@ -44,15 +45,18 @@ export async function uploadToCloudinary(base64Image: string, userName: string):
     return uploadResponse.secure_url;
   } catch (error) {
     console.error('cloudinary.ts: Error uploading image to Cloudinary:', error);
-    // Error aane par server crash hone se bachana aur wapas normal avatar de dena
-    return defaultAvatar;
+    // Error aane par raw base64 return kar do
+    return base64Image;
   }
 }
 
 // Ye function generic documents (PDFs, docs, images) upload karne ke liye hai
 export async function uploadDocumentToCloudinary(base64Data: string): Promise<string> {
   if (!base64Data) return '';
-  if (!isCloudinaryConfigured) return '';
+  if (!isCloudinaryConfigured) {
+    console.log('cloudinary.ts: Cloudinary not configured. Returning raw base64 document to be stored in database.');
+    return base64Data;
+  }
 
   try {
     const uploadResponse = await cloudinary.uploader.upload(base64Data, {

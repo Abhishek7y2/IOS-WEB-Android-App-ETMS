@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { useRouter } from 'next/navigation';
 import { ProfileModal } from './profile/ProfileModal';
+import { getDisplayRole } from '../utils/permissions';
 
 
 
@@ -97,6 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
       <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-zinc-200/40 bg-white/60 px-2 sm:px-4 md:px-6 backdrop-blur-xl shadow-sm transition-colors duration-300 dark:border-zinc-800/50 dark:bg-zinc-900/60">
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <button
+            data-testid="mobile-menu-button"
             onClick={onMenuClick}
             className="lg:hidden p-1.5 sm:p-2 -ml-1 sm:-ml-2 rounded-xl text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors"
             aria-label="Toggle Menu"
@@ -210,8 +212,8 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 </div>
               )}
               <div className="hidden text-left md:block">
-                <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 leading-tight">{user?.name || 'User Profile'}</p>
-                <p className="text-[10px] text-zinc-500 dark:text-zinc-500 font-medium">{user?.designation || (user?.role === 'superadmin' ? 'CEO' : (user?.role === 'admin' ? 'Admin' : 'Employee'))}</p>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-white truncate">{user?.name || 'User'}</p>
+                <p className="text-[10px] text-zinc-500 dark:text-zinc-500 font-medium">{user?.designation || getDisplayRole(user)}</p>
               </div>
               <ChevronDown className="h-3.5 w-3.5 text-zinc-500 hidden md:block" />
             </button>

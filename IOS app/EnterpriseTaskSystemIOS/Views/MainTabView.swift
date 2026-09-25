@@ -1,34 +1,151 @@
 import SwiftUI
 
-struct MainTabView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+/// Main Tab Navigation Container for WorkMate.
+public struct MainTabView: View {
+    @EnvironmentObject private var appRouter: AppRouter
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    @State private var showMoreMenu: Bool = false
     
-    var body: some View {
-        TabView {
+    public var body: some View {
+        TabView(selection: $appRouter.selectedTab) {
+            // Tab 1: Home / Dashboard
+            DashboardView()
+                .tabItem {
+                    Image(systemName: AppIcons.tabHome)
+                    if appRouter.selectedTab == .home { Text("Home") }
+                }
+                .tag(AppTab.home)
+            
+            // Tab 2: Tasks
             TaskListView()
                 .tabItem {
-                    Label("Tasks", systemImage: "list.bullet.clipboard")
+                    Image(systemName: AppIcons.tabTasks)
+                    if appRouter.selectedTab == .tasks { Text("Tasks") }
                 }
+                .tag(AppTab.tasks)
             
-            AttendanceClockView()
+            // Tab 3: Team
+            EmployeesDirectoryView()
                 .tabItem {
-                    Label("Attendance", systemImage: "clock.fill")
+                    Image(systemName: AppIcons.employeeDirectory)
+                    if appRouter.selectedTab == .employees { Text("Team") }
                 }
+                .tag(AppTab.employees)
             
-            DirectChatView()
+            // Tab 4: Leave
+            LeavePortalView()
                 .tabItem {
-                    Label("Chat", systemImage: "bubble.left.and.bubble.right.fill")
+                    Image(systemName: AppIcons.tabLeave)
+                    if appRouter.selectedTab == .leave { Text("Leave") }
                 }
+                .tag(AppTab.leave)
             
-            RAGChatbotView()
-                .tabItem {
-                    Label("AI Bot", systemImage: "sparkles")
-                }
             
-            ProfileView()
+            // Tab 10: More (Profile, Calendar, Employees, Notifications)
+            MoreMenuView()
                 .tabItem {
-                    Label("Profile", systemImage: "person.crop.circle.fill")
+                    Image(systemName: AppIcons.tabMore)
+                    if appRouter.selectedTab == .more { Text("More") }
                 }
+                .tag(AppTab.more)
+        }
+        .accentColor(AppColors.primary)
+        .fullScreenCover(isPresented: $appRouter.showNotificationsSheet) {
+            NotificationsView()
+        }
+    }
+}
+
+/// More Menu Screen providing fast access to Profile, Calendar, Employees, and Notifications.
+public struct MoreMenuView: View {
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    @EnvironmentObject private var appRouter: AppRouter
+    
+    public var body: some View {
+        NavigationStack {
+            List {
+                Section("Workspace") {
+                    NavigationLink(destination: MessagesInboxView()) {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: AppIcons.tabMessages)
+                                .foregroundColor(AppColors.primary)
+                                .frame(width: 24)
+                            Text("Communication")
+                                .foregroundColor(AppColors.textPrimary)
+                        }
+                    }
+                    NavigationLink(destination: CalendarView()) {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: AppIcons.calendar)
+                                .foregroundColor(AppColors.primary)
+                                .frame(width: 24)
+                            Text("Calendar & Holidays")
+                                .foregroundColor(AppColors.textPrimary)
+                        }
+                    }
+                    NavigationLink(destination: AttendanceView()) {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: AppIcons.tabAttendance)
+                                .foregroundColor(AppColors.primary)
+                                .frame(width: 24)
+                            Text("Attendance")
+                                .foregroundColor(AppColors.textPrimary)
+                        }
+                    }
+                    Button(action: {
+                        appRouter.showNotificationsSheet = true
+                    }) {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: AppIcons.tabNotifications)
+                                .foregroundColor(AppColors.primary)
+                                .frame(width: 24)
+                            Text("Notifications")
+                                .foregroundColor(AppColors.textPrimary)
+                        }
+                    }
+                }
+                
+                if let currentUser = authViewModel.currentUser, currentUser.isAdmin {
+                    Section("Administration") {
+                        NavigationLink(destination: ArchiveView()) {
+                            HStack(spacing: AppSpacing.sm) {
+                                Image(systemName: "archivebox")
+                                    .foregroundColor(AppColors.primary)
+                                    .frame(width: 24)
+                                Text("Archive Manager")
+                                    .foregroundColor(AppColors.textPrimary)
+                            }
+                        }
+                    }
+                }
+                
+                Section("Account & Settings") {
+                    NavigationLink(destination: ProfileView()) {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: AppIcons.tabProfile)
+                                .foregroundColor(AppColors.primary)
+                                .frame(width: 24)
+                            Text("My Profile")
+                                .foregroundColor(AppColors.textPrimary)
+                        }
+                    }
+                }
+                
+                Section {
+                    Button(role: .destructive, action: {
+                        authViewModel.logout()
+                    }) {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: AppIcons.signOut)
+                                .foregroundColor(AppColors.danger)
+                                .frame(width: 24)
+                            Text("Sign Out")
+                                .foregroundColor(AppColors.danger)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("More")
         }
     }
 }

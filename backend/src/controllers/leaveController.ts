@@ -72,3 +72,25 @@ export async function getLeaveStats(req: AuthRequest, res: Response) {
     return res.status(status).json({ success: false, message: error.message || 'Server error' });
   }
 }
+
+export async function updateLeaveBalance(req: AuthRequest, res: Response) {
+  try {
+    const { employeeId } = req.params;
+    const { year, newBalances } = req.body;
+    
+    // newBalances should be an array of { leaveType, total }
+    if (!employeeId || !year || !Array.isArray(newBalances)) {
+      return res.status(400).json({ success: false, message: 'employeeId, year, and newBalances array are required' });
+    }
+
+    const updatedBalance = await leaveService.updateLeaveBalance(employeeId, year, newBalances, req.user);
+    return res.status(200).json({ success: true, data: updatedBalance });
+  } catch (error: any) {
+    console.error('Update leave balance error:', error);
+    const status = error.status || 500;
+    return res.status(status).json({
+      success: false,
+      message: error.message || 'Server error',
+    });
+  }
+}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ShieldAlert, Trash2, AlertTriangle, Loader2, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
 
 export default function DeleteAccountTab() {
   const { user, forgotPassword, deleteAccount, verifyResetOtp } = useAuth();
@@ -109,7 +110,7 @@ export default function DeleteAccountTab() {
     setDeleteTimer(0);
   };
 
-  if (user?.role === 'admin' || user?.role === 'superadmin') {
+  if (checkIsAdmin(user)) {
     return null; // Admins cannot delete accounts from here
   }
 

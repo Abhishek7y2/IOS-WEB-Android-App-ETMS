@@ -13,11 +13,12 @@ import { LeaveDetailsModal } from '../../components/leave/LeaveDetailsModal';
 import { LeaveRequest } from '../../types/leave';
 import { Plus, List, Calendar as CalendarIcon, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
+import { isSuperAdmin as checkIsSuperAdmin, isAdmin as checkIsAdmin } from '@/utils/permissions';
 
 const LeaveContent = () => {
   const { user } = useAuth();
-  const isSuperAdmin = user?.role === 'superadmin' || user?.role === 'SuperAdmin' || user?.designation === 'CEO';
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.role === 'Admin' || user?.role === 'HR';
+  const isSuperAdmin = checkIsSuperAdmin(user);
+  const isAdmin = checkIsAdmin(user);
   
   const { leaves, loading, fetchLeaves, fetchBalance, fetchStats, updateLeaveStatus, deleteLeave } = useLeave();
   
@@ -153,6 +154,7 @@ const LeaveContent = () => {
           {!isSuperAdmin && (
             <button 
               type="button"
+              data-testid="apply-leave-button"
               onClick={() => setIsApplyModalOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 px-5.5 py-2.5 text-xs font-extrabold text-white shadow-md shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 cursor-pointer"
             >

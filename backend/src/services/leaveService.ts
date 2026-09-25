@@ -2,7 +2,7 @@ import Leave from '../models/Leave';
 import LeaveBalance from '../models/LeaveBalance';
 import User from '../models/User';
 import Notification from '../models/Notification';
-import { sendLeaveApprovalEmail, sendLeaveRejectionEmail } from '../utils/mailer';
+import { sendLeaveApprovalEmail, sendLeaveRejectionEmail, sendLeaveApplicationAdminEmail } from '../utils/mailer';
 import { publishEvent } from '../realtime/event.publisher';
 
 export interface ApplyLeaveDTO {
@@ -36,6 +36,33 @@ export class LeaveService {
 
     if (existingLeave) {
       throw { status: 400, message: 'You already have a leave request during this period.' };
+    }
+
+    // 1. Time-based Validation for Same-Day Leaves
+    const startObj = new Date(startDate);
+    const today = new Date();
+    if (startObj.toDateString() === today.toDateString()) {
+      const currentHour = today.getHours();
+      if (!halfDay) {
+        if (currentHour >= 10) {
+          throw { status: 400, message: 'Same-day full leave must be applied before 10:00 AM.' };
+        }
+      } else {
+        if (halfDaySession === 'Morning' && currentHour >= 9) {
+          throw { status: 400, message: 'Same-day morning half-leave must be applied before 9:00 AM.' };
+        } else if (halfDaySession === 'Afternoon' && currentHour >= 13) {
+          throw { status: 400, message: 'Same-day afternoon half-leave must be applied before 1:00 PM.' };
+        }
+      }
+    }
+
+    // 2. Balance Validation
+    const currentYear = today.getFullYear();
+    const userBalance = await this.getLeaveBalance(employeeId, currentYear, user);
+    const typeBalance = userBalance.balances.find((b: any) => b.leaveType === leaveType);
+    
+    if (typeBalance && typeBalance.remaining < totalDays) {
+      throw { status: 400, message: `You only have ${typeBalance.remaining} ${leaveType}(s) remaining. You cannot apply for ${totalDays} day(s).` };
     }
 
     const leave = new Leave({
@@ -82,6 +109,22 @@ export class LeaveService {
     }));
     if (notifications.length > 0) {
       await Notification.insertMany(notifications);
+    }
+
+    // Send email to all admins
+    for (const admin of admins) {
+      if (admin.email) {
+        sendLeaveApplicationAdminEmail(
+          admin.email,
+          admin.name || admin.firstName || 'Admin',
+          employeeName,
+          leaveType,
+          new Date(startDate).toLocaleDateString(),
+          new Date(endDate).toLocaleDateString(),
+          totalDays,
+          reason
+        ).catch(err => console.error('Failed to send admin leave notification email:', err));
+      }
     }
 
     return leave;
@@ -329,6 +372,43 @@ export class LeaveService {
       approvedLeaves,
       rejectedLeaves,
     };
+  }
+  async updateLeaveBalance(employeeId: string, year: number, newBalances: { leaveType: string, total: number }[], user: any) {
+    const userRole = user?.role as string;
+    
+    // Check if user is superadmin
+    if (userRole !== 'superadmin' && userRole !== 'SuperAdmin') {
+      throw { status: 403, message: 'Only SuperAdmins can modify leave balances.' };
+    }
+
+    let balance = await LeaveBalance.findOne({ employeeId, year });
+    if (!balance) {
+      balance = new LeaveBalance({
+        employeeId,
+        year,
+        balances: []
+      });
+    }
+
+    // Update balances
+    for (const update of newBalances) {
+      const existing = balance.balances.find((b: any) => b.leaveType === update.leaveType);
+      if (existing) {
+        existing.total = update.total;
+        existing.remaining = Math.max(0, existing.total - existing.used); // Ensure it doesn't go below 0 visually if wanted, but strict math is better.
+        existing.remaining = existing.total - existing.used;
+      } else {
+        balance.balances.push({
+          leaveType: update.leaveType,
+          total: update.total,
+          used: 0,
+          remaining: update.total
+        });
+      }
+    }
+
+    await balance.save();
+    return balance;
   }
 }
 

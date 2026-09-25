@@ -8,7 +8,7 @@
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-Realtime-black.svg)](https://socket.io/)
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 
-An end-to-end, enterprise-grade **Employee Work & Task Management Platform** featuring a **Node.js/TypeScript Backend**, **Next.js Web Portal**, **React Native (Expo) Mobile Application**, **Socket.IO Real-Time Engine**, and **Google Gemini AI RAG (Retrieval-Augmented Generation)** document analysis capabilities.
+An end-to-end, enterprise-grade **Employee Work & Task Management Platform** featuring a **Node.js/TypeScript Backend**, **Next.js Web Portal**, **React Native (Expo) Mobile Application**, and **Socket.IO Real-Time Engine**.
 
 ---
 
@@ -17,7 +17,6 @@ An end-to-end, enterprise-grade **Employee Work & Task Management Platform** fea
 - 🔐 **Enterprise Auth & Security**: Dual-token JWT (Access + Refresh), `bcrypt` password hashing, AES-256 field encryption, CSRF protection, and DPDP Act 2023 compliance.
 - 📱 **Cross-Platform Parity**: Web Dashboard (Next.js 16) + Native Mobile App (React Native/Expo 57).
 - ⚡ **Real-Time Communication**: Live task status synchronization, group chat, direct messaging, and broadcast notifications via Socket.IO.
-- 🤖 **AI-Powered RAG Engine**: Vector embeddings and intelligent document Q&A using Google Gemini AI (`@google/generative-ai`).
 - 👥 **Role-Based Access Control (RBAC)**: Fine-grained permissions for `superadmin`, `admin`, and `member` (Employee).
 - 📊 **Dynamic Data Visualizations**: SVG progress rings, priority bar graphs, and Recharts KPI analytics.
 - 📎 **Task Attachment Manager**: Cloudinary media integration with mobile gallery picker & full-screen image previewer.
@@ -44,7 +43,6 @@ An end-to-end, enterprise-grade **Employee Work & Task Management Platform** fea
                                               v
                                +--------------+--------------+
                                |  Cloudinary (Media Storage) |
-                               |  Gemini AI (RAG Embeddings) |
                                |  SMTP & Twilio (OTP Gateway)|
                                +-----------------------------+
 ```
@@ -58,12 +56,12 @@ Enterprise Employee Task Management System/
 ├── backend/                        # Node.js, Express & TypeScript REST API
 │   ├── src/
 │   │   ├── config/                 # Database & Cloudinary configurations
-│   │   ├── controllers/            # 11 Express business logic controllers
+│   │   ├── controllers/            # 9 Express business logic controllers
 │   │   ├── middleware/             # JWT Auth, Validation, & Error Handlers
-│   │   ├── models/                 # 22 Mongoose Database Schemas
+│   │   ├── models/                 # 15 Mongoose Database Schemas
 │   │   ├── realtime/               # Socket.IO event publishers & rooms
 │   │   ├── routes/                 # Express API endpoints
-│   │   ├── services/               # Core business services & Gemini RAG
+│   │   ├── services/               # Core business services
 │   │   └── server.ts               # Primary server launcher with Clustering
 │   └── package.json
 │
@@ -71,7 +69,7 @@ Enterprise Employee Task Management System/
 │   ├── src/
 │   │   ├── app/                    # Next.js App Router (Tasks, Attendance, Employees, etc.)
 │   │   ├── components/             # Reusable UI cards, tables, charts & modals
-│   │   ├── context/                # Auth, Task, Chat, & Theme React Contexts
+│   │   ├── context/                # Auth, Task, Attendance, Leave, & Communication Contexts
 │   │   └── services/               # Axios API clients & Socket Listeners
 │   └── package.json
 │
@@ -98,11 +96,7 @@ Enterprise Employee Task Management System/
 - **Attendance Check-In/Out**: Real-time timer, duration calculator, and monthly attendance calendar.
 - **Leave Management**: Employee leave balance tracking (Casual, Sick, Earned) with manager approval/rejection workflows.
 
-### 3. AI Document Engine (RAG)
-- **Document Ingestion**: PDF document chunking and vector embedding generation using `@google/generative-ai`.
-- **Intelligent Q&A**: Contextual AI answers based strictly on internal company documents.
-
-### 4. Real-Time Chat & Communication
+### 3. Real-Time Chat & Communication
 - **Direct & Group Chat**: Socket.IO powered messaging channels.
 - **Announcements**: High-priority broadcast notifications published to all employees.
 
@@ -156,7 +150,6 @@ JWT_REFRESH_EXPIRES_IN=7d
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
-GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### Mobile App (`mobile-app/.env`)

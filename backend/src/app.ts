@@ -18,14 +18,12 @@ import { json, urlencoded } from 'express';
 // Yahan humne saare alag-alag modules ke routes (URLs) ko import kiya hai.
 import authRoutes from './routes/authRoutes';
 import taskRoutes from './routes/taskRoutes';
-import chatRoutes from './routes/chatRoutes';
 import communicationRoutes from './routes/communicationRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import holidayRoutes from './routes/holidayRoutes';
 import attendanceRoutes from './routes/attendanceRoutes';
 import leaveRoutes from './routes/leaveRoutes';
 import profileRoutes from './routes/profileRoutes';
-import ragRoutes from './routes/ragRoutes';
 import noteRoutes from './routes/noteRoutes';
 
 // 3. Error Handling Middleware Imports
@@ -97,13 +95,11 @@ app.get(['/', '/api', '/api/health', '/health'], (req, res) => {
 app.use('/api/auth', authRoutes);                   // Authentication (Login, Register, OTP)
 app.use('/api/tasks', taskRoutes);                  // Tasks assign karna aur dekhna
 app.use('/api/communication', communicationRoutes); // Admin Announcements aur Chat logic
-app.use('/api/chat', chatRoutes);                   // Chat messages ke routes
 app.use('/api/notifications', notificationRoutes);  // In-app notifications bhejna
 app.use('/api/holidays', holidayRoutes);            // Company Holidays Calendar
 app.use('/api/attendance', attendanceRoutes);       // Employee Attendance records
 app.use('/api/leaves', leaveRoutes);                // Leave Management (Apply, Approve, Reject)
 app.use('/api/profile', profileRoutes);             // User Profile updates
-app.use('/api/rag', ragRoutes);                     // RAG Document Upload & QnA
 app.use('/api/notes', noteRoutes);                  // Notepad routes
 
 // =========================================================================

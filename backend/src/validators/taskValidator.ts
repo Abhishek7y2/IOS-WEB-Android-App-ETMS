@@ -10,14 +10,14 @@ export const taskCreateValidation = [
     .trim()
     .notEmpty()
     .withMessage(VALIDATION_MESSAGES.TASK.TITLE_REQUIRED)
-    .isLength({ max: 150 })
-    .withMessage(VALIDATION_MESSAGES.TASK.TITLE_TOO_LONG),
+    .isLength({ min: 5, max: 150 })
+    .withMessage('Task title must be between 5 and 150 characters'),
   body('description')
     .trim()
     .notEmpty()
     .withMessage(VALIDATION_MESSAGES.TASK.DESCRIPTION_REQUIRED)
-    .isLength({ max: 1000 })
-    .withMessage(VALIDATION_MESSAGES.TASK.DESCRIPTION_TOO_LONG),
+    .isLength({ min: 20, max: 1000 })
+    .withMessage('Task description must be between 20 and 1000 characters'),
   body('status')
     .optional()
     .isIn(statusValues)
@@ -45,15 +45,15 @@ export const taskUpdateValidation = [
     .trim()
     .notEmpty()
     .withMessage(VALIDATION_MESSAGES.TASK.TITLE_EMPTY)
-    .isLength({ max: 150 })
-    .withMessage(VALIDATION_MESSAGES.TASK.TITLE_TOO_LONG),
+    .isLength({ min: 5, max: 150 })
+    .withMessage('Task title must be between 5 and 150 characters'),
   body('description')
     .optional()
     .trim()
     .notEmpty()
     .withMessage(VALIDATION_MESSAGES.TASK.DESCRIPTION_EMPTY)
-    .isLength({ max: 1000 })
-    .withMessage(VALIDATION_MESSAGES.TASK.DESCRIPTION_TOO_LONG),
+    .isLength({ min: 20, max: 1000 })
+    .withMessage('Task description must be between 20 and 1000 characters'),
   body('status')
     .optional()
     .isIn(statusValues)

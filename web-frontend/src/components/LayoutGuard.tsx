@@ -61,8 +61,6 @@ export const LayoutGuard: React.FC<LayoutGuardProps> = ({ children }) => {
     );
   }
 
-  const isChatbotPage = pathname.startsWith('/chatbot');
-
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-zinc-50 transition-colors duration-300 dark:bg-zinc-950 relative">
       {/* Dynamic Ambient Background */}
@@ -79,7 +77,7 @@ export const LayoutGuard: React.FC<LayoutGuardProps> = ({ children }) => {
         <React.Suspense fallback={<div className="w-64 flex-none bg-white dark:bg-zinc-950 border-r border-zinc-200/40 dark:border-zinc-800/50" />}>
           <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         </React.Suspense>
-          <main className={`flex-1 transition-colors duration-300 bg-transparent ${isChatbotPage ? 'p-0 overflow-hidden' : 'p-4 md:p-8 overflow-y-auto custom-scrollbar'}`}>
+          <main className="flex-1 transition-colors duration-300 bg-transparent p-4 md:p-8 overflow-y-auto custom-scrollbar">
             {children}
           </main>
         </div>

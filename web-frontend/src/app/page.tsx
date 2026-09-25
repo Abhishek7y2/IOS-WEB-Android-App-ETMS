@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { AlertTriangle, BarChart3, CheckCircle2, CircleDashed, Clock3, ClipboardList, ListTodo, TimerReset, Users, MessageSquare, Megaphone, Inbox } from 'lucide-react';
+import { AlertTriangle, BarChart3, CheckCircle2, CircleDashed, Clock3, ClipboardList, ListTodo, TimerReset, Users } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useTasks } from '../context/TaskContext';
 import { TaskSummaryCard } from '../components/task/TaskSummaryCard';
@@ -22,7 +22,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { StatusBadge } from '../components/task/StatusBadge';
 import { formatDate } from '../utils/format';
 import { getDashboardMetrics, getRecentActivities, getRecentTasks } from '../utils/dashboardUtils';
-import { useCommunication } from '../context/CommunicationContext';
+
 import { ActivityLog } from '../types';
 
 const activityMessages: Record<ActivityLog['action'], string> = {
@@ -38,7 +38,7 @@ import { useAuth } from '../context/AuthContext';
 export default function DashboardPage() {
   const { tasks, employees, activities } = useTasks();
   const { user } = useAuth();
-  const { conversations, announcements, unreadMessageCount, unreadNotificationCount } = useCommunication();
+
   const [teamPage, setTeamPage] = React.useState(1);
 
   const metrics = getDashboardMetrics(tasks);
@@ -89,8 +89,8 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* ── MIDDLE GRID: Recent Tasks & Communication Quick Access ── */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        {/* ── MIDDLE GRID: Recent Tasks ── */}
+        <div className="grid gap-6 lg:grid-cols-1">
           {/* Recent Tasks */}
           <section className="enterprise-card rounded-2xl p-6">
             <div className="flex items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-900 pb-4">
@@ -122,48 +122,6 @@ export default function DashboardPage() {
                 <EmptyState title="No tasks found" message="Create tasks to see them tracked in real time." />
               )}
             </div>
-          </section>
-
-          {/* Communication Quick Access */}
-          <section className="enterprise-card rounded-2xl p-6">
-            <div className="flex items-center justify-between gap-4 border-b border-zinc-100 dark:border-zinc-900 pb-4">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-zinc-500 dark:text-zinc-500" />
-                <h3 className="text-lg font-bold text-zinc-950 dark:text-zinc-50 font-outfit">Communication</h3>
-              </div>
-              <Link href="/communication" className="text-xs font-bold text-teal-700 transition hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300">Open Hub &rarr;</Link>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <Link href="/communication" className="flex items-center gap-3 rounded-xl border border-zinc-200/60 bg-zinc-50/40 p-3 transition-all duration-300 hover:shadow-sm hover:scale-[1.01] dark:border-zinc-800 dark:bg-zinc-900/25">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/30">
-                  <Inbox className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-zinc-900 dark:text-zinc-50">Inbox</p>
-                  <p className="text-[10px] text-zinc-500 dark:text-zinc-500">{unreadMessageCount} unread</p>
-                </div>
-              </Link>
-              <Link href="/communication" className="flex items-center gap-3 rounded-xl border border-zinc-200/60 bg-zinc-50/40 p-3 transition-all duration-300 hover:shadow-sm hover:scale-[1.01] dark:border-zinc-800 dark:bg-zinc-900/25">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/30">
-                  <Megaphone className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-zinc-900 dark:text-zinc-50">Announcements</p>
-                  <p className="text-[10px] text-zinc-500 dark:text-zinc-500">{announcements.length} active</p>
-                </div>
-              </Link>
-            </div>
-            {conversations.length > 0 && (
-              <div className="mt-3 space-y-1.5 max-h-36 overflow-y-auto">
-                {conversations.slice(0, 3).map((conv) => (
-                  <Link key={conv.id} href="/communication" className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900/30">
-                    <div className={`h-2 w-2 rounded-full shrink-0 ${conv.unreadCount > 0 ? 'bg-blue-500' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
-                    <span className="font-bold text-zinc-800 dark:text-zinc-200 truncate">{conv.subject}</span>
-                    <span className="text-[10px] text-zinc-500 dark:text-zinc-500 ml-auto shrink-0">{conv.participantNames[0]}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
           </section>
         </div>
 
@@ -261,6 +219,7 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  data-testid="pagination-prev"
                   disabled={teamPage === 1}
                   onClick={() => setTeamPage(prev => Math.max(1, prev - 1))}
                   className="px-3 py-1.5 rounded-xl border-2 border-zinc-600 dark:border-zinc-600 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40 transition cursor-pointer"
@@ -269,6 +228,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   type="button"
+                  data-testid="pagination-next"
                   disabled={teamPage >= totalTeamPages}
                   onClick={() => setTeamPage(prev => Math.min(totalTeamPages, prev + 1))}
                   className="px-3 py-1.5 rounded-xl border-2 border-zinc-600 dark:border-zinc-600 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40 transition cursor-pointer"

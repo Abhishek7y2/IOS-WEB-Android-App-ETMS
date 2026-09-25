@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getArchivedTasks, restoreTask, getArchivedUsers, restoreUser, permanentDeleteTask, permanentDeleteUser } from '@/api/tasks';
 import { Task, Employee } from '@/types';
 import { toast } from 'sonner';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
 
 export default function ArchivePage() {
   const { user } = useAuth();
@@ -19,7 +20,7 @@ export default function ArchivePage() {
   const [deleteTaskConfirm, setDeleteTaskConfirm] = useState<string | null>(null);
   const [deleteUserConfirm, setDeleteUserConfirm] = useState<string | null>(null);
 
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.designation?.toLowerCase() === 'admin' || user?.designation?.toLowerCase() === 'ceo' || user?.designation?.toLowerCase() === 'project manager';
+  const isAdmin = checkIsAdmin(user);
 
   useEffect(() => {
     if (isAdmin) {

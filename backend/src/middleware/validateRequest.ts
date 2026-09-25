@@ -15,13 +15,16 @@ export function validateRequest(req: Request, res: Response, next: NextFunction)
   }
 
   // 3. Agar errors hain, toh unko ek proper format me map karke frontend ko wapas bhej dena (400 Bad Request)
+  const mappedErrors = errors.array().map((error) => ({
+    field: (error as any).param || (error as any).path || '',
+    message: error.msg,
+  }));
+  
+  const combinedMessage = "Validation failed: " + mappedErrors.map((e) => e.message).join(", ");
+
   return res.status(400).json({
     success: false,
-    message: 'Validation failed', // Generic message
-    errors: errors.array().map((error) => ({
-      // Har error ke liye us field ka naam aur error message dena (e.g., field: 'email', message: 'Valid email required')
-      field: (error as any).param || (error as any).path || '',
-      message: error.msg,
-    })),
+    message: combinedMessage,
+    errors: mappedErrors,
   });
 }

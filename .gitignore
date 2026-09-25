@@ -32,9 +32,26 @@ tsconfig.tsbuildinfo
 
 # OS / IDE
 .DS_Store
+**/.DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
+# Xcode / Apple
+*.xcuserstate
+**/*.xcuserstate
+xcuserdata/
+**/xcuserdata/
+*.xcscmblueprint
+DerivedData/
+**/DerivedData/
+
+# Logs
+*.log
+**/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Exclude Markdown files except root README.md
 *.md

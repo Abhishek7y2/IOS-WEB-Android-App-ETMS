@@ -415,6 +415,61 @@ System Administration Team`
   }
 }
 
+export async function sendLeaveApplicationAdminEmail(
+  adminEmail: string,
+  adminName: string,
+  employeeName: string,
+  leaveType: string,
+  startDate: string,
+  endDate: string,
+  totalDays: number,
+  reason: string
+): Promise<void> {
+  try {
+    const transporter = await getTransporter();
+    const SMTP_FROM = process.env.SMTP_FROM || 'noreply@employeemanager.com';
+
+    const mailOptions = {
+      from: SMTP_FROM,
+      to: adminEmail,
+      subject: `New Leave Request - ${employeeName}`,
+      text: `Dear ${adminName},
+
+A new leave request has been submitted by ${employeeName} and is awaiting your review.
+
+Leave Details:
+* Employee: ${employeeName}
+* Leave Type: ${leaveType}
+* From: ${startDate}
+* To: ${endDate}
+* Total Days: ${totalDays}
+* Reason: ${reason}
+
+Please log in to the Employee Management System to approve or reject this request.
+
+Thank you.
+
+Kind regards,
+Employee Management System`
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`\n✉️ [EMAIL] Sent new leave notification email to admin ${adminEmail}. MessageId: ${info.messageId}\n`);
+    
+    // If using Ethereal test account, output preview link
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log('\n=============================================================');
+      console.log(`[TEST EMAIL SENT] Admin Leave Notification preview link:`);
+      console.log(previewUrl);
+      console.log('=============================================================\n');
+    }
+  } catch (err) {
+    console.error('mailer.ts: Error sending admin leave notification email:', err);
+    throw err;
+  }
+}
+
 export async function sendLeaveApprovalEmail(
   email: string,
   employeeName: string,

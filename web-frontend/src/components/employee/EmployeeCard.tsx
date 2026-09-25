@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Employee } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
+import { isAdmin as checkIsAdmin, isSuperAdmin as checkIsSuperAdmin, getDisplayRole } from '@/utils/permissions';
 import { Trash2, Ban, CheckCircle2, Edit, Eye, X, ChevronDown } from 'lucide-react';
 
 interface EmployeeCardProps {
@@ -25,8 +26,8 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee }) => {
   const { user } = useAuth();
   const { updateEmployeeDesignation, updateEmployeeRole, removeEmployee, blockEmployee, unblockEmployee } = useTasks();
 
-  const isSuperAdmin = user?.role === 'superadmin';
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || isSuperAdmin;
+  const isSuperAdmin = checkIsSuperAdmin(user);
+  const isAdmin = checkIsAdmin(user);
   const canEditDesignation = isAdmin && (employee.role !== 'superadmin' || employee.id === user?.id);
   const canEditRole = isSuperAdmin && employee.id !== user?.id && employee.role !== 'superadmin';
 
@@ -122,8 +123,10 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee }) => {
         </td>
 
         <td className="px-6 py-4 text-center">
-          <span className="inline-flex items-center justify-center rounded-full border w-36 py-1 text-xs font-bold text-amber-700 border-amber-200 bg-amber-50 dark:text-amber-400 dark:border-amber-900/30 dark:bg-amber-900/10 capitalize truncate">
-            {employee.role === 'user' || employee.role === 'member' ? 'Employee' : employee.role}
+          <span className="inline-flex items-center justify-center">
+            <span className={`px-2.5 py-1 text-[10px] font-bold rounded-full ${employee.role === 'superadmin' ? 'bg-orange-100 text-orange-700' : employee.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+              {getDisplayRole(employee)}
+            </span>
           </span>
         </td>
 

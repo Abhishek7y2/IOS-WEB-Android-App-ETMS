@@ -74,20 +74,12 @@ export class TaskService {
 
     let { title, description, status, priority, dueDate, assignedTo, attachments } = dto;
 
-    if (!title || !title.trim()) {
-      throw { status: 400, message: 'Task title is required.' };
+    if (title && !title.trim()) {
+      throw { status: 400, message: 'Task title cannot be empty.' };
     }
-
-    title = title.replace(/\s{2,}/g, ' ').trim();
-    if (title.length < 5) throw { status: 400, message: 'Task title must contain at least 5 characters.' };
-    if (title.length > 120) throw { status: 400, message: 'Task title cannot exceed 120 characters.' };
 
     if (/<[a-z][\s\S]*>/i.test(title) || /<[a-z][\s\S]*>/i.test(description)) {
       throw { status: 400, message: 'HTML or JavaScript code is not allowed.' };
-    }
-
-    if (!description || !description.trim() || description.trim().length < 20) {
-      throw { status: 400, message: 'Task description must contain at least 20 characters.' };
     }
 
     const assignee = await User.findById(assignedTo);

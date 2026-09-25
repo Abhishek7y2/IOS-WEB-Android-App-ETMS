@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const LeaveForm: React.FC<Props> = ({ onSuccess, onCancel }) => {
-  const { applyLeave } = useLeave();
+  const { applyLeave, balance } = useLeave();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,6 +38,53 @@ export const LeaveForm: React.FC<Props> = ({ onSuccess, onCancel }) => {
       setTotalDays(0);
     }
   }, [formData.startDate, formData.endDate, formData.halfDay]);
+
+  const getBalanceForType = (type: string) => {
+    if (!balance || !balance.balances) return 0; // Default if not loaded yet
+    const item = balance.balances.find(b => b.leaveType === type);
+    return item ? item.remaining : 0;
+  };
+
+  const availableBalance = getBalanceForType(formData.leaveType);
+
+  const getValidationError = () => {
+    // We only validate against balance if it's loaded, otherwise we let it pass for now to avoid false errors while loading.
+    if (balance && balance.balances) {
+      if (availableBalance === 0) {
+        return `You don't have remaining leaves for ${formData.leaveType}.`;
+      }
+      if (totalDays > availableBalance) {
+        return `You have only ${availableBalance} leaves remaining. You are applying for ${totalDays.toFixed(1)} days.`;
+      }
+    }
+
+    if (formData.startDate) {
+        const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local
+        if (formData.startDate === todayStr) {
+            const now = new Date();
+            const timeInMinutes = now.getHours() * 60 + now.getMinutes();
+
+            if (!formData.halfDay) {
+                if (timeInMinutes >= 600) {
+                    return "Full day leaves for today must be applied before 10:00 AM.";
+                }
+            } else {
+                if (formData.halfDaySession === 'Morning') {
+                    if (timeInMinutes >= 540) {
+                        return "Morning half-day leaves for today must be applied before 9:00 AM.";
+                    }
+                } else {
+                    if (timeInMinutes >= 780) {
+                        return "Afternoon half-day leaves for today must be applied before 1:00 PM.";
+                    }
+                }
+            }
+        }
+    }
+    return null;
+  };
+
+  const validationError = getValidationError();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -83,6 +130,7 @@ export const LeaveForm: React.FC<Props> = ({ onSuccess, onCancel }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && <div className="p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-900/40 font-semibold">{error}</div>}
+      {validationError && <div className="p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-900/40 font-semibold">{validationError}</div>}
       
       <div>
         <label className="block text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1.5">
@@ -95,7 +143,11 @@ export const LeaveForm: React.FC<Props> = ({ onSuccess, onCancel }) => {
           className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-zinc-100 outline-none transition duration-200 focus:border-teal-700 dark:focus:border-teal-500 focus:ring-2 focus:ring-teal-700/20 font-semibold cursor-pointer"
           required
         >
-          {leaveTypes.map(type => <option key={type} value={type}>{type}</option>)}
+          {leaveTypes.map(type => (
+            <option key={type} value={type}>
+              {type} ({balance ? getBalanceForType(type) : 0} left)
+            </option>
+          ))}
         </select>
       </div>
 
@@ -194,7 +246,7 @@ export const LeaveForm: React.FC<Props> = ({ onSuccess, onCancel }) => {
         )}
         <button 
           type="submit" 
-          disabled={loading || totalDays === 0}
+          disabled={loading || totalDays === 0 || validationError !== null}
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0f3f33] hover:bg-[#0c3128] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-teal-900/20 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {loading && <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>}

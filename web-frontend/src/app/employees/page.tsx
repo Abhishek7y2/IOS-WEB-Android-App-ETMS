@@ -37,6 +37,9 @@ const validateNameField = (value: string, fieldName: string, allowSpace: boolean
   return null;
 };
 
+import { Archive } from 'lucide-react';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
+
 export default function EmployeesPage() {
   const { employees, addEmployee } = useTasks();
   const { user } = useAuth();
@@ -58,7 +61,7 @@ export default function EmployeesPage() {
     avatarUrl: ''
   });
 
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.role === 'Admin' || user?.role === 'Project Manager';
+  const isAdmin = checkIsAdmin(user);
 
   const filteredEmployees = employees.filter((emp) =>
     emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -182,6 +185,7 @@ export default function EmployeesPage() {
           {isAdmin && (
             <button
               type="button"
+              data-testid="add-employee-button"
               onClick={handleOpenModal}
               className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 px-5.5 py-2.5 text-xs font-extrabold text-white shadow-md shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 cursor-pointer"
             >

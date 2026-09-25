@@ -14,6 +14,7 @@ import { EnterpriseDateRangePicker } from '../../components/task/EnterpriseDateR
 import { Task, TaskAttachment, TaskInput, TaskPriority } from '../../types';
 import { getFilteredTasksByUrlStatus, TaskUrlStatus } from '../../utils/dashboardUtils';
 import { useAuth } from '../../context/AuthContext';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
 
 const convertFileToAttachment = (file: File): Promise<TaskAttachment> => {
   return new Promise((resolve, reject) => {
@@ -64,7 +65,7 @@ const priorityWeights: Record<string, number> = {
 export const TasksClient: React.FC<TasksClientProps> = ({ initialStatus }) => {
   const { tasks, employees, addTask, updateTask, updateTaskStatus, deleteTask } = useTasks();
   const { user } = useAuth();
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin');
+  const isAdmin = checkIsAdmin(user);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<TaskUrlStatus>(initialStatus);
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
@@ -376,6 +377,7 @@ export const TasksClient: React.FC<TasksClientProps> = ({ initialStatus }) => {
           {isAdmin && (
             <button
               type="button"
+              data-testid="create-task-button"
               onClick={() => setShowAddForm((current) => !current)}
               className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 px-5.5 py-2.5 text-xs font-extrabold text-white shadow-md shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 cursor-pointer"
             >
@@ -417,6 +419,7 @@ export const TasksClient: React.FC<TasksClientProps> = ({ initialStatus }) => {
                     <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500">{newTitle.length}/120 characters</span>
                   </div>
                   <input
+                    data-testid="task-title-input"
                     maxLength={120}
                     value={newTitle}
                     onChange={(e) => {
@@ -442,6 +445,7 @@ export const TasksClient: React.FC<TasksClientProps> = ({ initialStatus }) => {
                     <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500">{newDescription.length}/1000 characters</span>
                   </div>
                   <textarea
+                    data-testid="task-desc-input"
                     maxLength={1000}
                     value={newDescription}
                     onChange={(e) => {
@@ -529,7 +533,11 @@ export const TasksClient: React.FC<TasksClientProps> = ({ initialStatus }) => {
                 </div>
 
               </div>
-              <button type="submit" className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 px-5.5 py-2.5 text-xs font-extrabold text-white shadow-md shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 sm:w-auto cursor-pointer">
+              <button
+                type="submit"
+                data-testid="submit-task-button"
+                className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 via-teal-700 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 px-5.5 py-2.5 text-xs font-extrabold text-white shadow-md shadow-teal-700/20 hover:shadow-xl hover:shadow-teal-700/35 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 sm:w-auto cursor-pointer"
+              >
                 Create Task
               </button>
 

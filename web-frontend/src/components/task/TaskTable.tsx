@@ -9,6 +9,7 @@ import { EmptyState } from '../ui/EmptyState';
 import { LoadingState } from '../ui/LoadingState';
 import { Trash2, Pencil, Eye, Download } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { isAdmin as checkIsAdmin } from '../../utils/permissions';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -60,7 +61,7 @@ export const TaskTable: React.FC<TaskTableProps> = ({
     return desc.slice(0, 25) + '...';
   };
   const { user } = useAuth();
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin');
+  const isAdmin = checkIsAdmin(user);
 
   const handleDownloadSingleCSV = (task: Task) => {
     const headers = ['Title', 'Description', 'Priority', 'Status', 'Assigned To', 'Due Date', 'Created At'];

@@ -5,6 +5,7 @@ import axiosInstance from '@/services/axios';
 import { useQuery } from '@tanstack/react-query';
 import { Calendar as CalendarIcon, Plus, LayoutGrid, List, X, Eye, FileText, UserRound, CalendarDays } from 'lucide-react';
 import { toast } from 'sonner';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
 
 import { Holiday } from '@/types/holiday';
 import { HolidayTable } from '@/components/calendar/HolidayTable';
@@ -32,7 +33,7 @@ const priorityColors: Record<string, string> = {
 export default function CalendarPage() {
   const { user } = useAuth();
   const { tasks, employees } = useTasks();
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.role === 'Admin' || user?.role === 'HR';
+  const isAdmin = checkIsAdmin(user);
 
   const [view, setView] = useState<'calendar' | 'list' | 'notepad'>('calendar');
   const [currentDate, setCurrentDate] = useState(new Date());

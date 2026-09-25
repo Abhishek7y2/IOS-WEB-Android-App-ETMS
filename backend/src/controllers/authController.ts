@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { publishEvent } from '../realtime/event.publisher';
 import User from '../models/User';
 import { signToken, verifyToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt';
 import { sendVerificationOtp, sendResetPasswordOtp, sendAdminAccountCreationEmail, sendAccountDeactivationEmail, sendAccountReactivationEmail, sendAccountPermanentDeletionEmail, sendAccountBlockedEmail, sendAccountUnblockedEmail, sendPhoneChangeOtp } from '../utils/mailer';
@@ -204,7 +207,7 @@ export async function register(req: Request, res: Response) {
       data: {
         token: authToken,
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           firstName: user.firstName,
           lastName: user.lastName,
@@ -335,8 +338,10 @@ export async function login(req: Request, res: Response) {
       success: true,
       message: 'Login successful.',
       data: {
+        token: token,
+        refreshToken: refreshToken,
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           firstName: user.firstName,
           lastName: user.lastName,
@@ -359,8 +364,7 @@ export async function login(req: Request, res: Response) {
           termsAndConditions: user.termsAndConditions,
           // Sending verification status so the frontend shows the Verified badge.
           isVerified: user.isVerified,
-        },
-        token,
+        }
       },
     });
   } catch (error) {
@@ -909,7 +913,7 @@ export async function loginWithOtp(req: Request, res: Response) {
       message: 'Login successful.',
       data: {
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           firstName: user.firstName,
           lastName: user.lastName,
@@ -956,7 +960,7 @@ export async function profile(req: Request, res: Response) {
     message: 'Profile retrieved successfully.',
     data: {
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -986,11 +990,39 @@ export async function profile(req: Request, res: Response) {
 
 export async function getAllUsers(req: Request, res: Response) {
   try {
-    const users = await User.find({ isArchived: { $ne: true } }, 'name email role designation profilePicture isVerified firstName lastName mobileNumber isBlocked');
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const rawLimit = parseInt(req.query.limit as string) || 50;
+    // Cap limit at 100 and ensure positive
+    const limit = Math.max(1, Math.min(100, rawLimit));
+    const skip = (page - 1) * limit;
+
+    const query = { isArchived: { $ne: true } };
+
+    const [users, total] = await Promise.all([
+      User.find(
+        query, 
+        'name email role designation profilePicture isVerified firstName lastName mobileNumber isBlocked'
+      )
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+      User.countDocuments(query)
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
     return res.status(200).json({
       success: true,
       message: 'Users retrieved successfully.',
-      data: { users },
+      data: { 
+        users,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages
+        }
+      },
     });
   } catch (error) {
     console.error('authController.ts: Error fetching users:', error);
@@ -1246,7 +1278,7 @@ export async function updateUser(req: Request, res: Response) {
       message: 'User updated successfully.',
       data: {
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           firstName: user.firstName,
           lastName: user.lastName,
@@ -1328,6 +1360,10 @@ export async function deleteUser(req: Request, res: Response) {
 
     targetUser.isArchived = true;
     await targetUser.save({ validateBeforeSave: false });
+    
+    // Force logout the user immediately
+    publishEvent('auth.force_logout', { userId: id, reason: 'archived' }, [`user:${id}`]);
+    
     const user = targetUser;
     if (!user) {
       return res.status(404).json({
@@ -1397,6 +1433,9 @@ export async function blockUser(req: Request, res: Response) {
 
     targetUser.isBlocked = true;
     await targetUser.save({ validateBeforeSave: false });
+
+    // Force logout the user immediately
+    publishEvent('auth.force_logout', { userId: id, reason: 'blocked' }, [`user:${id}`]);
 
     sendAccountBlockedEmail(targetUser.email, targetUser.name).catch((err) => {
       console.error('Failed to send blocked email to', targetUser.email, err);
@@ -1615,7 +1654,7 @@ export async function permanentDeleteUser(req: Request, res: Response) {
 }
 
 export async function refreshToken(req: Request, res: Response) {
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
   if (!refreshToken) {
     return res.status(401).json({

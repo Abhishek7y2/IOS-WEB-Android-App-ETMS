@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 import User, { IUser } from '../models/User';
+import mongoose from 'mongoose';
 
 // TypeScript interface: Request object me 'user' ki field add karne ke liye
 export interface AuthRequest extends Request {
@@ -46,6 +47,14 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
     }
 
     // 6. Database me check karna ki is ID ka user exist karta hai ya nahi
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid session token format (mock session). Please sign out and sign back in.',
+        errors: [],
+        data: null
+      });
+    }
     const user = await User.findById(userId).select('+password'); // User dhoondna aur uski details lena
     if (!user) {
       return res.status(401).json({

@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../services/axios';
-import { Users, ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
+import { Users, ShieldAlert, CheckCircle, XCircle, SlidersHorizontal } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { LeaveBalanceEditorModal } from './LeaveBalanceEditorModal';
+import { isSuperAdmin } from '@/utils/permissions';
 
 interface TeamMember {
   _id: string;
@@ -14,8 +17,11 @@ interface TeamMember {
 }
 
 export const AdminTab: React.FC = () => {
+  const { user } = useAuth();
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const [editingEmployee, setEditingEmployee] = useState<{ id: string, name: string } | null>(null);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -67,6 +73,9 @@ export const AdminTab: React.FC = () => {
                   <th className="px-6 py-3 font-medium">Designation</th>
                   <th className="px-6 py-3 font-medium">Department</th>
                   <th className="px-6 py-3 font-medium">Status</th>
+                  {isSuperAdmin(user) && (
+                    <th className="px-6 py-3 font-medium text-right">Actions</th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -89,6 +98,17 @@ export const AdminTab: React.FC = () => {
                         </span>
                       )}
                     </td>
+                    {isSuperAdmin(user) && (
+                      <td className="px-6 py-3 text-right">
+                        <button 
+                          onClick={() => setEditingEmployee({ id: member._id, name: member.name })}
+                          className="p-2 text-zinc-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-zinc-800 rounded-lg transition-colors inline-flex"
+                          title="Adjust Leaves"
+                        >
+                          <SlidersHorizontal size={16} />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -96,6 +116,14 @@ export const AdminTab: React.FC = () => {
           </div>
         )}
       </div>
+
+      {editingEmployee && (
+        <LeaveBalanceEditorModal 
+          employeeId={editingEmployee.id}
+          employeeName={editingEmployee.name}
+          onClose={() => setEditingEmployee(null)}
+        />
+      )}
     </div>
   );
 };

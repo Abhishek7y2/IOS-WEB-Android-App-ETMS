@@ -6,7 +6,8 @@ import {
   updateLeaveStatus, 
   deleteLeave, 
   getLeaveBalance, 
-  getLeaveStats 
+  getLeaveStats,
+  updateLeaveBalance
 } from '../controllers/leaveController';
 import { authenticate } from '../middleware/authMiddleware';
 
@@ -47,6 +48,7 @@ router.get('/stats', authenticate, getLeaveStats);
  *         description: Success
  */
 router.get('/balance', authenticate, getLeaveBalance);
+router.put('/balance/:employeeId', authenticate, updateLeaveBalance);
 
 router.route('/')
   .get(authenticate, getLeaves)

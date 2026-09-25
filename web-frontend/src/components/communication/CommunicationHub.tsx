@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import { useCommunication } from '../../context/CommunicationContext';
 import { useAuth } from '../../context/AuthContext';
+import { useTasks } from '@/context/TaskContext';
+import { isAdmin as checkIsAdmin } from '@/utils/permissions';
+import { toast } from 'sonner';
 import { ConversationList } from './ConversationList';
 import { ConversationItem } from './ConversationItem';
 import { MessageBubble } from './MessageBubble';
@@ -45,7 +48,7 @@ export const CommunicationHub: React.FC = () => {
   } = useCommunication();
 
   const { user } = useAuth();
-  const isAdmin = (user?.role === 'admin' || user?.role === 'superadmin') || user?.role === 'Admin' || user?.role === 'Project Manager' || user?.role === 'CEO' || user?.designation === 'CEO';
+  const isAdmin = checkIsAdmin(user);
 
   const [activeTab, setActiveTab] = useState<TabId>('inbox');
   const [replyText, setReplyText] = useState('');
