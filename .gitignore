@@ -53,9 +53,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Exclude Markdown files except root README.md
+# Markdown files
 *.md
 **/*.md
 !README.md
+!**/README.md
+!*_ARCHITECTURE.md
+!**/*_ARCHITECTURE.md
 
 
