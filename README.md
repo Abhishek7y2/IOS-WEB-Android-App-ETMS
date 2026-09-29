@@ -33,6 +33,86 @@ An end-to-end, enterprise-grade **Employee Work & Task Management Platform** fea
 
 ---
 
+## 📸 Complete System Visual Tour & Screenshots
+
+All **58 complete screens, interactive modal sheets, and full-length pages** across all tiers are cataloged and preserved in the repository:
+
+### 1. 🌐 Web Portal (25 Complete Screens & Modals) - [`Screenshots/WEB APP/`](Screenshots/WEB%20APP)
+| ID | Screenshot File | Key Features Captured |
+|:---|:---|:---|
+| 01 | [`01_Web_Login_Screen.png`](Screenshots/WEB%20APP/01_Web_Login_Screen.png) | Dual auth (Email/Password), remember me, responsive glass card |
+| 02 | [`02_Web_Register_Screen.png`](Screenshots/WEB%20APP/02_Web_Register_Screen.png) | Role designation, department select, client-side validation |
+| 03 | [`03_Web_Forgot_Password_Screen.png`](Screenshots/WEB%20APP/03_Web_Forgot_Password_Screen.png) | Secure email verification flow |
+| 04 | [`04_Web_Reset_Password_Screen.png`](Screenshots/WEB%20APP/04_Web_Reset_Password_Screen.png) | Token verification & password complexity validator |
+| 05 | [`05_Web_Verify_Account_Screen.png`](Screenshots/WEB%20APP/05_Web_Verify_Account_Screen.png) | 6-digit OTP email activation UI |
+| 06 | [`06_Web_Dashboard_Full_Screen.png`](Screenshots/WEB%20APP/06_Web_Dashboard_Full_Screen.png) | Real-time KPIs, SVG Progress Ring, status donut chart, priority bars |
+| 07 | [`07_Web_Tasks_Full_Screen.png`](Screenshots/WEB%20APP/07_Web_Tasks_Full_Screen.png) | Multi-filter task table, priority badges, assignee avatars, action menus |
+| 08 | [`08_Web_Tasks_Create_Modal.png`](Screenshots/WEB%20APP/08_Web_Tasks_Create_Modal.png) | Complete task authoring form (title, desc, priority, assignees, dates) |
+| 09 | [`09_Web_Attendance_Full_Screen.png`](Screenshots/WEB%20APP/09_Web_Attendance_Full_Screen.png) | Live punch in/out clock, location validator, weekly hours breakdown |
+| 10 | [`10_Web_Leave_Table_Full_Screen.png`](Screenshots/WEB%20APP/10_Web_Leave_Table_Full_Screen.png) | Quota balances, status chips, multi-select filters, approvals |
+| 11 | [`11_Web_Leave_Calendar_Full_Screen.png`](Screenshots/WEB%20APP/11_Web_Leave_Calendar_Full_Screen.png) | Monthly leave overview with color-coded employee badges |
+| 12 | [`12_Web_Leave_Apply_Modal.png`](Screenshots/WEB%20APP/12_Web_Leave_Apply_Modal.png) | Date range picker, half-day toggle, reason input |
+| 13 | [`13_Web_Employees_Directory_Full_Screen.png`](Screenshots/WEB%20APP/13_Web_Employees_Directory_Full_Screen.png) | Employee grid, designations, roles, contact cards |
+| 14 | [`14_Web_Employees_Add_Member_Modal.png`](Screenshots/WEB%20APP/14_Web_Employees_Add_Member_Modal.png) | Add Team Member / Create User modal |
+| 15 | [`15_Web_Communication_Inbox_Screen.png`](Screenshots/WEB%20APP/15_Web_Communication_Inbox_Screen.png) | Direct messages & group channels, real-time thread |
+| 16 | [`16_Web_Communication_Announcements_Screen.png`](Screenshots/WEB%20APP/16_Web_Communication_Announcements_Screen.png) | Company-wide broadcast alerts & priority tags |
+| 17 | [`17_Web_Communication_Analytics_Screen.png`](Screenshots/WEB%20APP/17_Web_Communication_Analytics_Screen.png) | Team engagement metrics & message volume charts |
+| 18 | [`18_Web_Calendar_Schedule_Full_Screen.png`](Screenshots/WEB%20APP/18_Web_Calendar_Schedule_Full_Screen.png) | Full monthly calendar with project deadlines & holidays |
+| 19 | [`19_Web_Calendar_Notepad_View.png`](Screenshots/WEB%20APP/19_Web_Calendar_Notepad_View.png) | Integrated markdown notes & sprint planning scratchpad |
+| 20 | [`20_Web_Calendar_Add_Holiday_Modal.png`](Screenshots/WEB%20APP/20_Web_Calendar_Add_Holiday_Modal.png) | Company holiday creator with calendar sync |
+| 21 | [`21_Web_Profile_Full_Screen.png`](Screenshots/WEB%20APP/21_Web_Profile_Full_Screen.png) | Super Admin Profile overview & personal records |
+| 22 | [`22_Web_Settings_Profile_Full_Screen.png`](Screenshots/WEB%20APP/22_Web_Settings_Profile_Full_Screen.png) | System configuration, theme toggle, notifications |
+| 23 | [`23_Web_Settings_Security_Full_Screen.png`](Screenshots/WEB%20APP/23_Web_Settings_Security_Full_Screen.png) | Password rotation, 2-factor authentication controls |
+| 24 | [`24_Web_Settings_Data_Download_Screen.png`](Screenshots/WEB%20APP/24_Web_Settings_Data_Download_Screen.png) | DPDP Act 2023 compliant data export (JSON/CSV) |
+| 25 | [`25_Web_Archive_Full_Screen.png`](Screenshots/WEB%20APP/25_Web_Archive_Full_Screen.png) | Soft-deleted tasks and completed records repository |
+
+---
+
+### 2. 📱 Native iOS App (17 Simulator Retina Screens) - [`Screenshots/IOS APP/`](Screenshots/IOS%20APP)
+| ID | Screenshot File | Key Features Captured |
+|:---|:---|:---|
+| 01 | [`01_iOS_Login_Screen.png`](Screenshots/IOS%20APP/01_iOS_Login_Screen.png) | SwiftUI glassmorphism cards, biometric triggers |
+| 02 | [`02_iOS_Register_Screen.png`](Screenshots/IOS%20APP/02_iOS_Register_Screen.png) | Pure SwiftUI form controls & validation |
+| 03 | [`03_iOS_Forgot_Password_Screen.png`](Screenshots/IOS%20APP/03_iOS_Forgot_Password_Screen.png) | SwiftUI reset credential sheet |
+| 04 | [`04_iOS_Dashboard_Screen.png`](Screenshots/IOS%20APP/04_iOS_Dashboard_Screen.png) | Native SVG Donut chart, Sparklines, active shift card |
+| 05 | [`05_iOS_Tasks_Screen.png`](Screenshots/IOS%20APP/05_iOS_Tasks_Screen.png) | Categorized task rows with status toggles |
+| 06 | [`06_iOS_Team_Directory_Screen.png`](Screenshots/IOS%20APP/06_iOS_Team_Directory_Screen.png) | Native iOS list with quick call/message actions |
+| 07 | [`07_iOS_Leave_Portal_Screen.png`](Screenshots/IOS%20APP/07_iOS_Leave_Portal_Screen.png) | Leave quotas, balance cards, historical requests |
+| 08 | [`08_iOS_More_Menu_Screen.png`](Screenshots/IOS%20APP/08_iOS_More_Menu_Screen.png) | Navigation grid to sub-modules & settings |
+| 09 | [`09_iOS_Attendance_Clock_Screen.png`](Screenshots/IOS%20APP/09_iOS_Attendance_Clock_Screen.png) | Native GPS punch-in with live circular timer |
+| 10 | [`10_iOS_Calendar_Holidays_Screen.png`](Screenshots/IOS%20APP/10_iOS_Calendar_Holidays_Screen.png) | SwiftUI holiday list & scheduled items |
+| 11 | [`11_iOS_Messages_Inbox_Screen.png`](Screenshots/IOS%20APP/11_iOS_Messages_Inbox_Screen.png) | Real-time chat threads & message composer |
+| 12 | [`12_iOS_Profile_Screen.png`](Screenshots/IOS%20APP/12_iOS_Profile_Screen.png) | Native user card, role indicators, logout button |
+| 13 | [`13_iOS_Archive_Screen.png`](Screenshots/IOS%20APP/13_iOS_Archive_Screen.png) | Archived records manager |
+| 14 | [`14_iOS_Notifications_Screen.png`](Screenshots/IOS%20APP/14_iOS_Notifications_Screen.png) | Interactive in-app notification center |
+| 15 | [`15_iOS_Create_Task_Sheet.png`](Screenshots/IOS%20APP/15_iOS_Create_Task_Sheet.png) | SwiftUI modal sheet with date pickers & priority segmented control |
+| 16 | [`16_iOS_Apply_Leave_Sheet.png`](Screenshots/IOS%20APP/16_iOS_Apply_Leave_Sheet.png) | SwiftUI modal sheet with leave type picker |
+| 17 | [`17_iOS_Compose_Message_Sheet.png`](Screenshots/IOS%20APP/17_iOS_Compose_Message_Sheet.png) | Direct message recipient picker & text input |
+
+---
+
+### 3. 📲 Mobile App (16 Cross-Platform Screens) - [`Screenshots/MOBILE APP/`](Screenshots/MOBILE%20APP)
+| ID | Screenshot File | Key Features Captured |
+|:---|:---|:---|
+| 01 | [`01_Mobile_Welcome_Screen.png`](Screenshots/MOBILE%20APP/01_Mobile_Welcome_Screen.png) | Seamless entry point for Phone & Email logins |
+| 02 | [`02_Mobile_Register_Screen.png`](Screenshots/MOBILE%20APP/02_Mobile_Register_Screen.png) | Mobile registration with department selector |
+| 03 | [`03_Mobile_Login_Phone_Screen.png`](Screenshots/MOBILE%20APP/03_Mobile_Login_Phone_Screen.png) | OTP phone authentication flow |
+| 04 | [`04_Mobile_Login_Email_Screen.png`](Screenshots/MOBILE%20APP/04_Mobile_Login_Email_Screen.png) | Email/Password login interface |
+| 05 | [`05_Mobile_Forgot_Password_Screen.png`](Screenshots/MOBILE%20APP/05_Mobile_Forgot_Password_Screen.png) | Mobile password recovery |
+| 06 | [`06_Mobile_Dashboard_Screen.png`](Screenshots/MOBILE%20APP/06_Mobile_Dashboard_Screen.png) | Mobile KPI cards, donut chart, task summary |
+| 07 | [`07_Mobile_Tasks_Screen.png`](Screenshots/MOBILE%20APP/07_Mobile_Tasks_Screen.png) | Touch-optimized task list with priority chips |
+| 08 | [`08_Mobile_Calendar_Screen.png`](Screenshots/MOBILE%20APP/08_Mobile_Calendar_Screen.png) | Integrated calendar view with day schedule |
+| 09 | [`09_Mobile_Docs_RAG_Screen.png`](Screenshots/MOBILE%20APP/09_Mobile_Docs_RAG_Screen.png) | Semantic document chunks & enterprise knowledge base |
+| 10 | [`10_Mobile_Communication_Screen.png`](Screenshots/MOBILE%20APP/10_Mobile_Communication_Screen.png) | Group & direct chat channels |
+| 11 | [`11_Mobile_Attendance_Screen.png`](Screenshots/MOBILE%20APP/11_Mobile_Attendance_Screen.png) | Mobile time clock with punch in/out |
+| 12 | [`12_Mobile_Leave_Screen.png`](Screenshots/MOBILE%20APP/12_Mobile_Leave_Screen.png) | Leave requests & balances |
+| 13 | [`13_Mobile_Team_Screen.png`](Screenshots/MOBILE%20APP/13_Mobile_Team_Screen.png) | Searchable employee roster |
+| 14 | [`14_Mobile_Chatbot_AI_Screen.png`](Screenshots/MOBILE%20APP/14_Mobile_Chatbot_AI_Screen.png) | Integrated AI chatbot assistant for employee queries |
+| 15 | [`15_Mobile_Profile_Settings_Screen.png`](Screenshots/MOBILE%20APP/15_Mobile_Profile_Settings_Screen.png) | Full user profile, account settings & preferences |
+| 16 | [`16_Mobile_Notifications_Modal.png`](Screenshots/MOBILE%20APP/16_Mobile_Notifications_Modal.png) | Slide-over notification panel |
+
+---
+
 ## 🏗️ System Architecture
 
 ```
